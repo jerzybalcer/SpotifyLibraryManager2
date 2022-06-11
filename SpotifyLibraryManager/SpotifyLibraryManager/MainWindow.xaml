@@ -34,6 +34,8 @@
             </ItemsControl>
         </ScrollViewer>
 
+        <Frame x:Name="DetailsPanel" Grid.Column="1" Grid.Row="1" HorizontalAlignment="Stretch"/>
+
         <Grid x:Name="TitleBar" Background="#202020" MouseDown="TitleBar_MouseDown" Height="35" Grid.Row="0" Grid.ColumnSpan="2">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="150"/>
@@ -74,9 +76,8 @@
 
                 <!--Search Bar-->
                 <StackPanel Orientation="Horizontal" Grid.Column="2" VerticalAlignment="Center" x:Name="SearchStackPanel" Margin="30,0,30,0">
-                    <TextBox Text="Search" VerticalContentAlignment="Center" Style="{StaticResource CustomTextBox}" x:Name="SearchText" Width="100" Height="24" 
-                     VerticalAlignment="Center" HorizontalAlignment="Right" Background="#383838" Foreground="White" 
-                     Cursor="IBeam"/>
+                    <TextBox Text="Search" Style="{StaticResource CustomTextBox}" x:Name="SearchText" Width="100" Height="24" 
+                     VerticalAlignment="Center" HorizontalAlignment="Right" Background="#383838" Foreground="White" />
                     <Button x:Name="SearchBtn" Style="{StaticResource ToolBarButtonStyle}" Background="#383838" Foreground="White" Width="18" Height="18" IsDefault="True">
                         <TextBlock Text="🔎︎" VerticalAlignment="Center"/>
                     </Button>

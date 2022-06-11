@@ -1,4 +1,5 @@
 ﻿using SpotifyLibraryManager.Models;
+using SpotifyLibraryManager.Pages;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
@@ -23,6 +24,7 @@ namespace SpotifyLibraryManager
             if (await Spotify.CheckClient())
             {
                 Albums.ItemsSource = await AlbumsManager.GetAlbumsFromDb();
+                DetailsPanel.Navigate(new DetailsPage(Albums.Items[2] as Album));
             }
         }
 

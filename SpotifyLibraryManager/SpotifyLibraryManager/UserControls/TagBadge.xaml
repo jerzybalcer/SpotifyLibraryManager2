@@ -1,0 +1,12 @@
+﻿<UserControl x:Class="SpotifyLibraryManager.UserControls.TagBadge"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:SpotifyLibraryManager.UserControls"
+             mc:Ignorable="d" 
+             d:DesignHeight="40" d:DesignWidth="200">
+    <Border Background="{Binding TagColor}" x:Name="TagBadgeBorder" CornerRadius="15" HorizontalAlignment="Left" Padding="10,5,10,5" Margin="5" SnapsToDevicePixels="True">
+        <TextBlock Foreground="White" Text="{Binding TagName}" FontSize="16" FontWeight="DemiBold" x:Name="TagNameTxt"/>
+    </Border>
+</UserControl>
