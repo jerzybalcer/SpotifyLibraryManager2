@@ -34,7 +34,7 @@
             </ItemsControl>
         </ScrollViewer>
 
-        <Grid x:Name="TitleBar" Background="#202020" MouseDown="TitleBar_MouseDown" Height="35" Grid.Row="0">
+        <Grid x:Name="TitleBar" Background="#202020" MouseDown="TitleBar_MouseDown" Height="35" Grid.Row="0" Grid.ColumnSpan="2">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="150"/>
                 <ColumnDefinition Width="*"/>
@@ -56,7 +56,7 @@
                 <!--Refresh albums-->
                 <Button Content="Sync" Foreground="White" Grid.Column="0" Style="{StaticResource ToolBarButtonStyle}"
                  Margin="0,0,30,0" Padding="10,0,10,0" HorizontalAlignment="Center" VerticalAlignment="Center" Height="22" 
-                 />
+                 x:Name="SyncBtn" Click="SyncBtn_Click"/>
 
                 <!--Sort Menu-->
                 <StackPanel Orientation="Horizontal" Grid.Column="1" VerticalAlignment="Center" x:Name="SortStackPanel">
@@ -83,11 +83,10 @@
                 </StackPanel>
 
                 <!--User Menu-->
-                <Menu x:Name="Menu" HorizontalAlignment="Center" HorizontalContentAlignment="Center" VerticalAlignment="Center" Grid.Column="3" 
-              >
+                <Menu x:Name="Menu" HorizontalAlignment="Center" HorizontalContentAlignment="Center" VerticalAlignment="Center" Grid.Column="3">
                     <MenuItem Margin="5,0,5,0" x:Name="MenuUser" VerticalAlignment="Center" 
-                      VerticalContentAlignment="Center" Height="22" Foreground="White">
-                        <MenuItem Header="Logout" x:Name="MenuLogout" Margin="5,0,5,0"/>
+                      VerticalContentAlignment="Center" Height="22" Foreground="White" Header="User">
+                        <MenuItem Header="Login" x:Name="LoginBtn" Margin="5,0,5,0" Click="LoginBtn_Click"/>
                     </MenuItem>
                 </Menu>
             </Grid>
@@ -119,7 +118,5 @@
                 </Button>
             </StackPanel>
         </Grid>
-
-        <Button x:Name="LoginBtn" Content="Login" Click="LoginBtn_Click" Grid.Column="1"/>
     </Grid>
 </Window>

@@ -9,9 +9,9 @@
     <Grid>
         <Button Width="210" Height="230" Margin="7,0,7,15" x:Name="AlbumBtn" Style="{StaticResource AlbumCoverButtonStyle}" Cursor="Hand">
             <StackPanel>
-                <Image Source="{Binding Album.Images[0].Url}" x:Name="Cover" Width="180" Height="180" Margin="0,2,0,0"/>
-                <TextBlock Text="{Binding Album.Name}" x:Name="Title" FontSize="14" FontWeight="Medium" Foreground="White" VerticalAlignment="Bottom" HorizontalAlignment="Center" Margin="2,2,2,1" TextTrimming="CharacterEllipsis"/>
-                <TextBlock Text="{Binding Album.Artists[0].Name}" x:Name="Artist" FontSize="12" Foreground="#a3a3a3" VerticalAlignment="Bottom" HorizontalAlignment="Center" Margin="2,0,2,2" TextTrimming="CharacterEllipsis"/>
+                <Image Source="{Binding CoverUrl}" x:Name="Cover" Width="180" Height="180" Margin="0,2,0,0"/>
+                <TextBlock Text="{Binding Title}" x:Name="Title" FontSize="14" FontWeight="Medium" Foreground="White" VerticalAlignment="Bottom" HorizontalAlignment="Center" Margin="2,2,2,1" TextTrimming="CharacterEllipsis"/>
+                <TextBlock Text="{Binding Artists[0].Name}" x:Name="Artist" FontSize="12" Foreground="#a3a3a3" VerticalAlignment="Bottom" HorizontalAlignment="Center" Margin="2,0,2,2" TextTrimming="CharacterEllipsis"/>
             </StackPanel>
         </Button>
     </Grid>
