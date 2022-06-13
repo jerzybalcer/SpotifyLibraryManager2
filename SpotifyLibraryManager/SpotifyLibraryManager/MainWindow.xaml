@@ -18,23 +18,9 @@
             <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
 
-        <!--Album Covers View-->
-        <ScrollViewer x:Name="AlbumsScrollViewer" Grid.Column="0" Grid.Row="1" HorizontalAlignment="Left" Margin="5">
-            <ItemsControl x:Name="Albums">
-                <ItemsControl.ItemsPanel>
-                    <ItemsPanelTemplate>
-                        <UniformGrid Columns="3" Margin="0" VerticalAlignment="Top"/>
-                    </ItemsPanelTemplate>
-                </ItemsControl.ItemsPanel>
-                <ItemsControl.ItemTemplate>
-                    <DataTemplate>
-                        <userControls:AlbumCoverButton/>
-                    </DataTemplate>
-                </ItemsControl.ItemTemplate>
-            </ItemsControl>
-        </ScrollViewer>
+        <Frame x:Name="AlbumsList" Grid.Column="0" Grid.Row="1" HorizontalAlignment="Left" Margin="5" Source="/Pages/AlbumsListPage.xaml" LoadCompleted="Frame_LoadCompleted"/>
 
-        <Frame x:Name="DetailsPanel" Grid.Column="1" Grid.Row="1" HorizontalAlignment="Stretch"/>
+        <Frame x:Name="DetailsPanel" Grid.Column="1" Grid.Row="1" HorizontalAlignment="Stretch" Source="/Pages/DetailsPage.xaml" LoadCompleted="Frame_LoadCompleted" NavigationUIVisibility="Hidden"/>
 
         <Grid x:Name="TitleBar" Background="#202020" MouseDown="TitleBar_MouseDown" Height="35" Grid.Row="0" Grid.ColumnSpan="2">
             <Grid.ColumnDefinitions>
@@ -65,11 +51,14 @@
                     <Menu x:Name="SortMenu" HorizontalAlignment="Left" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" 
                   VerticalAlignment="Center" Margin="0,0,0,0">
                         <MenuItem Header="Sort By" Foreground="White" Margin="5,0,5,0" VerticalContentAlignment="Center" VerticalAlignment="Center" Height="22" x:Name="SortTopItem">
-                            <MenuItem Header="Name" x:Name="SortByName" Margin="5,0,5,0" IsCheckable="True"/>
+                            <MenuItem Header="Title" x:Name="SortByTitle" Margin="5,0,5,0" IsCheckable="True"/>
+                            <MenuItem Header="Artist" x:Name="SortByArtist" Margin="5,0,5,0" IsCheckable="True"/>
+                            <MenuItem Header="ReleaseDate" x:Name="SortByReleaseDate" Margin="5,0,5,0" IsCheckable="True"/>
+                            <MenuItem Header="LikeDate" x:Name="SortByLikeDate" Margin="5,0,5,0" IsCheckable="True"/>
                         </MenuItem>
                     </Menu>
                     <Button Style="{StaticResource ToolBarButtonStyle}"  Background="#383838" Foreground="White" Width="18" Height="18" 
-                    x:Name="SortDirectionChanger">
+                    x:Name="SortDirectionChanger" Click="SortDirectionChanger_Click">
                         <TextBlock x:Name="SortDirection" Text="⋁" VerticalAlignment="Center"/>
                     </Button>
                 </StackPanel>

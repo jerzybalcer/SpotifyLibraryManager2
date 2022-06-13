@@ -6,7 +6,7 @@
       xmlns:local="clr-namespace:SpotifyLibraryManager.Pages" xmlns:userControls="clr-namespace:SpotifyLibraryManager.UserControls"
       mc:Ignorable="d" 
       d:DesignHeight="450" d:DesignWidth="800"
-      Title="DetailsPage" Loaded="Page_Loaded">
+      Title="DetailsPage">
 
     <Grid Background="#121212" Margin="10">
         <Grid.RowDefinitions>
@@ -22,33 +22,54 @@
         </Grid.ColumnDefinitions>
 
         <StackPanel Grid.Row="0" Grid.ColumnSpan="2">
-            <TextBlock x:Name="Title" Text="Title" Foreground="White" FontSize="36" HorizontalAlignment="Center" Margin="5"/>
-            <TextBlock x:Name="Artists" Text="Artist1, Artist2" Foreground="#b3b3b3" FontSize="20" HorizontalAlignment="Center" Margin="5"/>
+            <TextBlock x:Name="Title" Text="{Binding Album.Title}" Foreground="White" FontSize="36" HorizontalAlignment="Center" Margin="5"/>
+            <TextBlock x:Name="Artists" Text="{Binding ArtistsString}" Foreground="#b3b3b3" FontSize="20" HorizontalAlignment="Center" Margin="5"/>
         </StackPanel>
 
-        <TextBlock Text="Tags" Foreground="White" FontSize="30" Margin="5,0,0,0" FontWeight="DemiBold" Grid.Row="1"/>
+        <TextBlock Text="Tags" Foreground="White" FontSize="30" Margin="10,0,0,0" FontWeight="DemiBold" Grid.Row="1"/>
 
         <StackPanel Grid.Row="2" Margin="20,20,10,10">
             <TextBlock Text="New" Foreground="#b3b3b3" FontSize="20" FontWeight="Medium" Margin="0,0,0,10"/>
             <StackPanel Orientation="Horizontal">
-                <TextBox x:Name="NewTag" Style="{StaticResource CustomTextBox}" MinHeight="25" MinWidth="150" TextChanged="NewTag_TextChanged"/>
-                <Menu x:Name="AllTagsList">
-                </Menu>
+                <Grid>
+                    <TextBox x:Name="NewTag" Style="{StaticResource CustomTextBox}" MinHeight="25" MinWidth="150" TextChanged="NewTag_TextChanged" Margin="0,0,5,0"/>
+                    <TextBlock IsHitTestVisible="False" Text="Enter tag name" VerticalAlignment="Center" HorizontalAlignment="Left" Margin="10,0,0,0" Foreground="White">
+                        <TextBlock.Style>
+                            <Style TargetType="{x:Type TextBlock}">
+                                <Setter Property="Visibility" Value="Collapsed"/>
+                                <Style.Triggers>
+                                    <DataTrigger Binding="{Binding Text, ElementName=NewTag}" Value="">
+                                        <Setter Property="Visibility" Value="Visible"/>
+                                    </DataTrigger>
+                                </Style.Triggers>
+                            </Style>
+                        </TextBlock.Style>
+                    </TextBlock>
+                </Grid>
             </StackPanel>
 
             <Popup x:Name="SuggestionPopup" Margin="0,0,0,10" PlacementTarget="{Binding ElementName=NewTag}" HorizontalAlignment="Center" 
-                   AllowsTransparency="True" PopupAnimation="Slide" VerticalOffset="3">
+                   AllowsTransparency="True" PopupAnimation="Slide" VerticalOffset="3" IsOpen="{Binding IsSuggestionPopupOpen, Mode=TwoWay}">
                 <Border Padding="5"
                 SnapsToDevicePixels="True"
                 BorderThickness="1" Cursor="Hand"
                 Background="#404040" CornerRadius="5" BorderBrush="Transparent">
                     <StackPanel Orientation="Vertical">
-                        <Border CornerRadius="10" x:Name="SuggestionTextBorder" Margin="0,2,0,2" MouseLeftButtonDown="SuggestionTextBorder_MouseLeftButtonDown">
+                        <Border CornerRadius="10" x:Name="SuggestionTextBorder" Margin="0,2,0,2">
+                            <Border.InputBindings>
+                                <MouseBinding MouseAction="LeftClick" Command="{Binding AddTagCommand}" CommandParameter="{Binding Text, ElementName=SuggestionText}"/>
+                            </Border.InputBindings>
                             <TextBlock x:Name="SuggestionText" FontSize="14" Padding="5,2,5,2" FontWeight="DemiBold"/>
                         </Border>
-                        <Border CornerRadius="10" x:Name="NewSuggestionTextBorder" Margin="0,2,0,2" MouseLeftButtonDown="NewSuggestionTextBorder_MouseLeftButtonDown" 
+                        <Border CornerRadius="10" x:Name="NewSuggestionTextBorder" Margin="0,2,0,2" 
                                 Background="#575757">
-                            <TextBlock x:Name="NewSuggestionText" FontSize="14" Padding="5,2,5,2" Foreground="White" FontWeight="DemiBold"/>
+                            <Border.InputBindings>
+                                <MouseBinding MouseAction="LeftClick" Command="{Binding AddTagCommand}" CommandParameter="{Binding Text, ElementName=NewSuggestionText}"/>
+                            </Border.InputBindings>
+                            <StackPanel Orientation="Horizontal">
+                                <TextBlock FontSize="14" Padding="5,2,0,2" Foreground="White" FontWeight="DemiBold" Text="New: "/>
+                                <TextBlock x:Name="NewSuggestionText" FontSize="14" Padding="0,2,5,2" Foreground="White" FontWeight="DemiBold"/>
+                            </StackPanel>
                         </Border>
                     </StackPanel>
                 </Border>
@@ -57,7 +78,18 @@
 
         <StackPanel Orientation="Vertical" Grid.Row="3" Margin="20,10,10,10">
             <TextBlock Text="Assigned" Foreground="#b3b3b3" FontSize="20" Margin="0,0,0,10" FontWeight="Medium"/>
-            <WrapPanel x:Name="TagList"/>
+            <ItemsControl x:Name="TagList" ItemsSource="{Binding Album.Tags}">
+                <ItemsControl.ItemsPanel>
+                    <ItemsPanelTemplate>
+                        <WrapPanel/>
+                    </ItemsPanelTemplate>
+                </ItemsControl.ItemsPanel>
+                <ItemsControl.ItemTemplate>
+                    <DataTemplate>
+                        <userControls:TagBadge/>
+                    </DataTemplate>
+                </ItemsControl.ItemTemplate>
+            </ItemsControl>
         </StackPanel>
     </Grid>
 </Page>

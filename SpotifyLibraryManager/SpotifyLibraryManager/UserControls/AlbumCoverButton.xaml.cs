@@ -1,4 +1,6 @@
-﻿using System;
+﻿using SpotifyLibraryManager.Models;
+using SpotifyLibraryManager.Pages;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -23,6 +25,12 @@ namespace SpotifyLibraryManager.UserControls
         public AlbumCoverButton()
         {
             InitializeComponent();
+        }
+
+        private void AlbumBtn_Click(object sender, RoutedEventArgs e)
+        {
+            //((MainWindow)App.Current.MainWindow).DetailsPanel.Navigate(new DetailsPage((Album)DataContext));
+            
         }
     }
 }

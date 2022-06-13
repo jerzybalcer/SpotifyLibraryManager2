@@ -3,10 +3,15 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
-             xmlns:local="clr-namespace:SpotifyLibraryManager.UserControls"
+             xmlns:local="clr-namespace:SpotifyLibraryManager.UserControls" xmlns:converters="clr-namespace:SpotifyLibraryManager.Helpers.Converters"
              mc:Ignorable="d" 
-             d:DesignHeight="40" d:DesignWidth="200">
-    <Border Background="{Binding TagColor}" x:Name="TagBadgeBorder" CornerRadius="15" HorizontalAlignment="Left" Padding="10,5,10,5" Margin="5" SnapsToDevicePixels="True">
-        <TextBlock Foreground="White" Text="{Binding TagName}" FontSize="16" FontWeight="DemiBold" x:Name="TagNameTxt"/>
+             d:DesignHeight="40" d:DesignWidth="200" x:Name="ThisControl" Loaded="ThisControl_Loaded">
+    <UserControl.Resources>
+        <converters:HexBrushConverter x:Key="HexBrushConverter"/>
+    </UserControl.Resources>
+    <Border Background="{Binding ColorHex, Converter={StaticResource HexBrushConverter}}" x:Name="TagBadgeBorder" 
+            CornerRadius="15" HorizontalAlignment="Left" Padding="10,5,10,5" Margin="5" SnapsToDevicePixels="True"
+            DataContext="{Binding Path=DataContext, ElementName=ThisControl}">
+        <TextBlock Foreground="White" Text="{Binding Name}" FontSize="16" FontWeight="DemiBold" x:Name="TagNameTxt"/>
     </Border>
 </UserControl>

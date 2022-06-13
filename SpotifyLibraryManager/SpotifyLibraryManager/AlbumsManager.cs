@@ -11,6 +11,7 @@ namespace SpotifyLibraryManager
 {
     public static class AlbumsManager
     {
+        public static List<Album> Albums { get; set; }
         private static async Task<List<SavedAlbum>> LoadAllFromSpotify()
         {
             var albums = new List<SavedAlbum>();
