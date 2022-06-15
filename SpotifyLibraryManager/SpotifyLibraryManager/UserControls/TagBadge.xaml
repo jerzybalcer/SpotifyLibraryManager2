@@ -12,6 +12,16 @@
     <Border Background="{Binding ColorHex, Converter={StaticResource HexBrushConverter}}" x:Name="TagBadgeBorder" 
             CornerRadius="15" HorizontalAlignment="Left" Padding="10,5,10,5" Margin="5" SnapsToDevicePixels="True"
             DataContext="{Binding Path=DataContext, ElementName=ThisControl}">
-        <TextBlock Foreground="White" Text="{Binding Name}" FontSize="16" FontWeight="DemiBold" x:Name="TagNameTxt"/>
+        <StackPanel Orientation="Horizontal">
+            <TextBlock Foreground="White" Text="{Binding Name}" FontSize="16" FontWeight="DemiBold" x:Name="TagNameTxt" 
+                       HorizontalAlignment="Left" VerticalAlignment="Center"/>
+            <TextBlock x:Name="Cross" Foreground="White" Text="✖" FontSize="10" FontWeight="DemiBold" 
+                       VerticalAlignment="Center" HorizontalAlignment="Right" Margin="5,0,0,0" Cursor="Hand" 
+                       DataContext="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type Page}}, Path=DataContext}">
+                <TextBlock.InputBindings>
+                    <MouseBinding MouseAction="LeftClick" Command="{Binding RemoveTagCommand}" CommandParameter="{Binding Text, ElementName=TagNameTxt}"/>
+                </TextBlock.InputBindings>
+            </TextBlock>
+        </StackPanel>
     </Border>
 </UserControl>

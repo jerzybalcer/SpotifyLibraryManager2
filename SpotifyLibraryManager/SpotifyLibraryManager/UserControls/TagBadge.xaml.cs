@@ -16,7 +16,9 @@ namespace SpotifyLibraryManager.UserControls
         }
         private void ThisControl_Loaded(object sender, RoutedEventArgs e)
         {
-            TagNameTxt.Foreground = ContrastCalculator.GetContrastingBrush((TagBadgeBorder.Background as SolidColorBrush)!.Color); 
+            SolidColorBrush contrastingBrush = ContrastCalculator.GetContrastingBrush((TagBadgeBorder.Background as SolidColorBrush)!.Color);
+            TagNameTxt.Foreground = contrastingBrush;
+            Cross.Foreground = contrastingBrush;
         }
     }
 }

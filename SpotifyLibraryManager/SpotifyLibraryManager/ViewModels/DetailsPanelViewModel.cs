@@ -17,6 +17,7 @@ namespace SpotifyLibraryManager.ViewModels
         public List<Tag> AllTags { get; set; }
         public bool IsSuggestionPopupOpen { get; set; }
         public Command AddTagCommand { get; set; }
+        public Command RemoveTagCommand { get; set; }
 
         public string ArtistsString
         {
@@ -41,6 +42,7 @@ namespace SpotifyLibraryManager.ViewModels
         public DetailsPanelViewModel()
         {
             AddTagCommand = new Command(AddTag);
+            RemoveTagCommand = new Command(RemoveTag);
             LoadAllTags();
         }
 
@@ -69,8 +71,30 @@ namespace SpotifyLibraryManager.ViewModels
                 }
                 await db.SaveChangesAsync();
                 Album = thisAlbum;
-                AllTags = await db.Tags.ToListAsync();
+                AllTags = await db.Tags.AsNoTracking().ToListAsync();
             }
+            LibraryManager.UpdateAlbum(Album);
+        }
+
+        private async void RemoveTag(object param)
+        {
+            string tagName = (string)param;
+
+            using (var db = new LibraryContext())
+            {
+                var thisAlbum = db.Albums
+                    .Include(album => album.Tags)
+                    .Include(album => album.Artists)
+                    .First(album => album.AlbumId == Album.AlbumId);
+
+                var tagToRemove = thisAlbum.Tags.FindIndex(tag => tag.Name.ToLower() == tagName.ToLower());
+
+                thisAlbum.Tags.RemoveAt(tagToRemove);
+
+                await db.SaveChangesAsync();
+                Album = thisAlbum;
+            }
+            LibraryManager.UpdateAlbum(Album);
         }
 
         private async void LoadAllTags()

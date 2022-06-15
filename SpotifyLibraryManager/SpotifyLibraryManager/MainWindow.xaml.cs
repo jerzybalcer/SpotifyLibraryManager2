@@ -23,13 +23,17 @@ namespace SpotifyLibraryManager
             InitializeComponent();
             var albumsList = new AlbumsListViewModel();
             var detailsPanel = new DetailsPanelViewModel();
-            var libraryManager = new LibraryManager(albumsList, detailsPanel);
+            var toolBar = new ToolBarViewModel();
+
+            var libraryManager = new LibraryManager(albumsList, detailsPanel, toolBar);
             albumsList.LibraryManager = libraryManager;
             detailsPanel.LibraryManager = libraryManager;
+            toolBar.LibraryManager = libraryManager;
 
             this.DataContext = libraryManager;
             AlbumsList.DataContext = albumsList;
             DetailsPanel.DataContext = detailsPanel;
+            ToolBar.DataContext = toolBar;
         }
 
         private async void Window_Loaded(object sender, RoutedEventArgs e)
@@ -52,7 +56,7 @@ namespace SpotifyLibraryManager
         private void SortDirectionChanger_Click(object sender, RoutedEventArgs e)
         {
             _isSortingAscending = !_isSortingAscending;
-            SortDirection.Text = _isSortingAscending ? "⋀" : "⋁";
+            //SortDirection.Text = _isSortingAscending ? "⋀" : "⋁";
         }
 
         private void MinimizeBtn_Click(object sender, RoutedEventArgs e)

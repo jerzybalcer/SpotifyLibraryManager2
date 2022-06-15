@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using SpotifyLibraryManager.Database;
 
@@ -10,9 +11,10 @@ using SpotifyLibraryManager.Database;
 namespace SpotifyLibraryManager.Migrations
 {
     [DbContext(typeof(LibraryContext))]
-    partial class LibraryContextModelSnapshot : ModelSnapshot
+    [Migration("20220613210307_ManyToManyFix")]
+    partial class ManyToManyFix
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder.HasAnnotation("ProductVersion", "6.0.5");
@@ -29,7 +31,7 @@ namespace SpotifyLibraryManager.Migrations
 
                     b.HasIndex("ArtistsArtistId");
 
-                    b.ToTable("AlbumArtist", (string)null);
+                    b.ToTable("AlbumArtist");
                 });
 
             modelBuilder.Entity("AlbumTag", b =>
@@ -44,7 +46,7 @@ namespace SpotifyLibraryManager.Migrations
 
                     b.HasIndex("TagsTagId");
 
-                    b.ToTable("AlbumTag", (string)null);
+                    b.ToTable("AlbumTag");
                 });
 
             modelBuilder.Entity("SpotifyLibraryManager.Models.Album", b =>
@@ -80,7 +82,7 @@ namespace SpotifyLibraryManager.Migrations
 
                     b.HasKey("AlbumId");
 
-                    b.ToTable("Albums", (string)null);
+                    b.ToTable("Albums");
                 });
 
             modelBuilder.Entity("SpotifyLibraryManager.Models.Artist", b =>
@@ -95,7 +97,7 @@ namespace SpotifyLibraryManager.Migrations
 
                     b.HasKey("ArtistId");
 
-                    b.ToTable("Artists", (string)null);
+                    b.ToTable("Artists");
                 });
 
             modelBuilder.Entity("SpotifyLibraryManager.Models.Tag", b =>
@@ -114,7 +116,7 @@ namespace SpotifyLibraryManager.Migrations
 
                     b.HasKey("TagId");
 
-                    b.ToTable("Tags", (string)null);
+                    b.ToTable("Tags");
                 });
 
             modelBuilder.Entity("AlbumArtist", b =>

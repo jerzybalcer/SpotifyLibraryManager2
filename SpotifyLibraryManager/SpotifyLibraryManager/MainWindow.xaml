@@ -33,54 +33,8 @@
             <TextBlock Text="Spotify Library Manager" HorizontalAlignment="Left" Foreground="#FF1DB954" FontWeight="Bold" VerticalAlignment="Center" Margin="5,0,0,0" Grid.Column="0"/>
 
             <!--Tools-->
-            <Grid Height="25" HorizontalAlignment="Center" VerticalAlignment="Center" Grid.Row="0" Grid.Column="1">
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="*"/>
-                    <ColumnDefinition Width="*"/>
-                    <ColumnDefinition Width="*"/>
-                    <ColumnDefinition Width="*"/>
-                </Grid.ColumnDefinitions>
+            <Frame x:Name="ToolBar" Height="25" HorizontalAlignment="Center" VerticalAlignment="Center" Grid.Row="0" Grid.Column="1" Source="/Pages/ToolBarPage.xaml" LoadCompleted="Frame_LoadCompleted" NavigationUIVisibility="Hidden"/>
 
-                <!--Refresh albums-->
-                <Button Content="Sync" Foreground="White" Grid.Column="0" Style="{StaticResource ToolBarButtonStyle}"
-                 Margin="0,0,30,0" Padding="10,0,10,0" HorizontalAlignment="Center" VerticalAlignment="Center" Height="22" 
-                 x:Name="SyncBtn" Click="SyncBtn_Click"/>
-
-                <!--Sort Menu-->
-                <StackPanel Orientation="Horizontal" Grid.Column="1" VerticalAlignment="Center" x:Name="SortStackPanel">
-                    <Menu x:Name="SortMenu" HorizontalAlignment="Left" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" 
-                  VerticalAlignment="Center" Margin="0,0,0,0">
-                        <MenuItem Header="Sort By" Foreground="White" Margin="5,0,5,0" VerticalContentAlignment="Center" VerticalAlignment="Center" Height="22" x:Name="SortTopItem">
-                            <MenuItem Header="Title" x:Name="SortByTitle" Margin="5,0,5,0" IsCheckable="True"/>
-                            <MenuItem Header="Artist" x:Name="SortByArtist" Margin="5,0,5,0" IsCheckable="True"/>
-                            <MenuItem Header="ReleaseDate" x:Name="SortByReleaseDate" Margin="5,0,5,0" IsCheckable="True"/>
-                            <MenuItem Header="LikeDate" x:Name="SortByLikeDate" Margin="5,0,5,0" IsCheckable="True"/>
-                        </MenuItem>
-                    </Menu>
-                    <Button Style="{StaticResource ToolBarButtonStyle}"  Background="#383838" Foreground="White" Width="18" Height="18" 
-                    x:Name="SortDirectionChanger" Click="SortDirectionChanger_Click">
-                        <TextBlock x:Name="SortDirection" Text="⋁" VerticalAlignment="Center"/>
-                    </Button>
-                </StackPanel>
-
-                <!--Search Bar-->
-                <StackPanel Orientation="Horizontal" Grid.Column="2" VerticalAlignment="Center" x:Name="SearchStackPanel" Margin="30,0,30,0">
-                    <TextBox Text="Search" Style="{StaticResource CustomTextBox}" x:Name="SearchText" Width="100" Height="24" 
-                     VerticalAlignment="Center" HorizontalAlignment="Right" Background="#383838" Foreground="White" />
-                    <Button x:Name="SearchBtn" Style="{StaticResource ToolBarButtonStyle}" Background="#383838" Foreground="White" Width="18" Height="18" IsDefault="True">
-                        <TextBlock Text="🔎︎" VerticalAlignment="Center"/>
-                    </Button>
-                </StackPanel>
-
-                <!--User Menu-->
-                <Menu x:Name="Menu" HorizontalAlignment="Center" HorizontalContentAlignment="Center" VerticalAlignment="Center" Grid.Column="3">
-                    <MenuItem Margin="5,0,5,0" x:Name="MenuUser" VerticalAlignment="Center" 
-                      VerticalContentAlignment="Center" Height="22" Foreground="White" Header="User">
-                        <MenuItem Header="Login" x:Name="LoginBtn" Margin="5,0,5,0" Click="LoginBtn_Click"/>
-                    </MenuItem>
-                </Menu>
-            </Grid>
-            
             <!--Window Controls-->
             <StackPanel HorizontalAlignment="Right" Orientation="Horizontal" VerticalAlignment="Center" Grid.Column="2">
                 <Button Background="Transparent" Foreground="White" x:Name="MinimizeBtn" Click="MinimizeBtn_Click" Width="35" 
