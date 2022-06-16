@@ -32,8 +32,10 @@
             <TextBlock Text="New" Foreground="#b3b3b3" FontSize="20" FontWeight="Medium" Margin="0,0,0,10"/>
             <StackPanel Orientation="Horizontal">
                 <Grid>
-                    <TextBox x:Name="NewTag" Style="{StaticResource CustomTextBox}" MinHeight="25" MinWidth="150" TextChanged="NewTag_TextChanged" Margin="0,0,5,0"/>
-                    <TextBlock IsHitTestVisible="False" Text="Enter tag name" VerticalAlignment="Center" HorizontalAlignment="Left" Margin="10,0,0,0" Foreground="White">
+                    <TextBox x:Name="NewTag" Style="{StaticResource CustomTextBox}" MinHeight="25" MinWidth="150" TextChanged="NewTag_TextChanged" 
+                             Margin="0,0,5,0" FontSize="14"/>
+                    <TextBlock IsHitTestVisible="False" Text="Enter tag name" VerticalAlignment="Center" HorizontalAlignment="Left" Margin="10,0,0,0" 
+                               Foreground="White" FontSize="14">
                         <TextBlock.Style>
                             <Style TargetType="{x:Type TextBlock}">
                                 <Setter Property="Visibility" Value="Collapsed"/>

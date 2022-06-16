@@ -94,9 +94,6 @@ namespace SpotifyLibraryManager.UserControls
             {
                 Filters.Add(tag);
             }
-
-            //var vm = DataContext as ToolBarViewModel;
-            //vm.Filters = Filters;
         }
     }
 }

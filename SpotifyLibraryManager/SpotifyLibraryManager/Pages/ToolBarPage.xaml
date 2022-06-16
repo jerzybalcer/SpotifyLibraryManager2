@@ -24,7 +24,7 @@
         <!--Refresh albums-->
         <Button Content="Sync" Foreground="White" Grid.Column="0" Style="{StaticResource ToolBarButtonStyle}"
                  Padding="10,0,10,0" HorizontalAlignment="Center" VerticalAlignment="Center" Height="22" 
-                 x:Name="SyncBtn" Margin="15,0,15,0"/>
+                 x:Name="SyncBtn" Margin="15,0,15,0" FontSize="14"/>
 
         <!--Sort Menu-->
         <StackPanel Orientation="Horizontal" Grid.Column="1" VerticalAlignment="Center" HorizontalAlignment="Center" x:Name="SortStackPanel" Margin="15,0,15,0">
@@ -47,8 +47,8 @@
         <StackPanel Orientation="Horizontal" Grid.Column="2" VerticalAlignment="Center" x:Name="SearchStackPanel" Margin="15,0,15,0">
             <Grid>
                 <TextBox Text="{Binding SearchPhrase}" Style="{StaticResource CustomTextBox}" x:Name="SearchText" Width="100" Height="24" 
-                     VerticalAlignment="Center" HorizontalAlignment="Right" Background="#383838" Foreground="White" />
-                <TextBlock IsHitTestVisible="False" Text="Search" VerticalAlignment="Center" HorizontalAlignment="Left" Margin="10,0,0,0" Foreground="White">
+                     VerticalAlignment="Center" HorizontalAlignment="Right" Background="#383838" Foreground="White" FontSize="14" Padding="10,2,10,2"/>
+                <TextBlock IsHitTestVisible="False" Text="Search" FontSize="14" VerticalAlignment="Center" HorizontalAlignment="Left" Margin="10,0,0,0" Foreground="White">
                     <TextBlock.Style>
                         <Style TargetType="{x:Type TextBlock}">
                             <Setter Property="Visibility" Value="Collapsed"/>
@@ -63,7 +63,7 @@
             </Grid>
             <Button x:Name="SearchBtn" Style="{StaticResource ToolBarButtonStyle}" Background="#383838" Foreground="White" 
                     Width="18" Height="18" IsDefault="True" Command="{Binding SearchCommand}">
-                <TextBlock Text="🔎︎" VerticalAlignment="Center"/>
+                <TextBlock Text="🔎︎" FontSize="12" VerticalAlignment="Center"/>
             </Button>
         </StackPanel>
 
@@ -88,7 +88,7 @@
 
         <!--User Menu-->
         <Menu x:Name="Menu" HorizontalAlignment="Center" HorizontalContentAlignment="Center" VerticalAlignment="Center" Grid.Column="4" Margin="15,0,15,0">
-            <MenuItem Margin="5,0,5,0" x:Name="MenuUser" VerticalAlignment="Center" 
+            <MenuItem Margin="5,0,5,0" x:Name="MenuUser" VerticalAlignment="Center"
                       VerticalContentAlignment="Center" Height="22" Foreground="White" Header="User">
                 <MenuItem Header="Login" x:Name="LoginBtn" Margin="5,0,5,0"/>
             </MenuItem>

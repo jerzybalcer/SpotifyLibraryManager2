@@ -41,6 +41,15 @@
                                     <TextBlock x:Name="CheckMark" Text="✔" FontSize="14" HorizontalAlignment="Center" VerticalAlignment="Center" Grid.Column="1" Visibility="Hidden"
                                            Foreground="{Binding Path=Fill, ElementName=ColorCircle, Converter={StaticResource ContrastingBrushConverter}}" Panel.ZIndex="2"/>
                                 </Grid>
+                                <Border.Style>
+                                    <Style>
+                                        <Style.Triggers>
+                                            <Trigger Property="Border.IsMouseOver" Value="true">
+                                                <Setter Property="Border.Background" Value="#575757"/>
+                                            </Trigger>
+                                        </Style.Triggers>
+                                    </Style>
+                                </Border.Style>
                             </Border>
                         </DataTemplate>
                     </ItemsControl.ItemTemplate>

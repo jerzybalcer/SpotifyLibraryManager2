@@ -14,6 +14,7 @@ namespace SpotifyLibraryManager.ViewModels
     public class LibraryManager : ViewModelBase
     {
         public List<Album> Albums { get; set; }
+        public List<Tag> AllTags { get; set; }
         public DetailsPanelViewModel DetailsPanel { get; set; }
         public ToolBarViewModel ToolBar { get; set; }
         public AlbumsListViewModel AlbumsList { get; set; }
@@ -24,16 +25,14 @@ namespace SpotifyLibraryManager.ViewModels
             DetailsPanel = detailsPanel;
             ToolBar = toolBar;
             ReloadAlbums();
+            LoadAllTags();
+            ToolBar.AllTags = AllTags;
         }
         
         public async void SelectAlbum(Album album)
         {
             DetailsPanel.Album = album;
-
-            using (var db = new LibraryContext())
-            {
-                ToolBar.AllTags = await db.Tags.ToListAsync();
-            }
+            DetailsPanel.AllTags = AllTags;
         }
 
         public async void ReloadAlbums()
@@ -42,9 +41,17 @@ namespace SpotifyLibraryManager.ViewModels
             AlbumsList.VisibleAlbums = new ObservableCollection<Album>(Albums);
         }
 
+        public async void LoadAllTags()
+        {
+            using (var db = new LibraryContext())
+            {
+                AllTags = await db.Tags.ToListAsync();
+            }
+        }
+
         public void UpdateAlbum(Album album)
         {
-            AlbumsList.VisibleAlbums[Albums.FindIndex(a => a.AlbumId == album.AlbumId)] = album;
+            AlbumsList.VisibleAlbums[AlbumsList.VisibleAlbums.ToList().FindIndex(a => a.AlbumId == album.AlbumId)] = album;
             Albums[Albums.FindIndex(a => a.AlbumId == album.AlbumId)] = album;
         }
 
@@ -65,7 +72,13 @@ namespace SpotifyLibraryManager.ViewModels
 
         public void SearchAlbums(string searchPhrase)
         {
-            var matching = Albums.Where(a => a.Title.ToLower().Contains(searchPhrase.ToLower())).ToList();
+            if(string.IsNullOrEmpty(searchPhrase))
+            {
+                AlbumsList.VisibleAlbums = new ObservableCollection<Album>(Albums);
+                return;
+            }
+
+            List<Album> matching = new List<Album>();
             
             foreach(var album in Albums)
             {

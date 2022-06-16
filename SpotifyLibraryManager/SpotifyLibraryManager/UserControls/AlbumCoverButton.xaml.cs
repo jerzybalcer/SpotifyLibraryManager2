@@ -26,11 +26,5 @@ namespace SpotifyLibraryManager.UserControls
         {
             InitializeComponent();
         }
-
-        private void AlbumBtn_Click(object sender, RoutedEventArgs e)
-        {
-            //((MainWindow)App.Current.MainWindow).DetailsPanel.Navigate(new DetailsPage((Album)DataContext));
-            
-        }
     }
 }

@@ -8,7 +8,7 @@
              d:DesignHeight="450" d:DesignWidth="800" x:Name="ThisControl">
     <Grid>
         <Button Width="210" Height="230" Margin="7,0,7,15" x:Name="AlbumBtn" Style="{StaticResource AlbumCoverButtonStyle}" Cursor="Hand" 
-                Click="AlbumBtn_Click" Command="{Binding SelectAlbumCommand}" CommandParameter="{Binding ElementName=AlbumInfo, Path=DataContext}"
+                Command="{Binding SelectAlbumCommand}" CommandParameter="{Binding ElementName=AlbumInfo, Path=DataContext}"
                 DataContext="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type Page}}, Path=DataContext}">
             <StackPanel x:Name="AlbumInfo" DataContext="{Binding Path=DataContext, ElementName=ThisControl}">
                 <Image Source="{Binding CoverUrl}" x:Name="Cover" Width="180" Height="180" Margin="0,2,0,0"/>

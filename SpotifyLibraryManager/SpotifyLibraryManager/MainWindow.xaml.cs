@@ -16,8 +16,6 @@ namespace SpotifyLibraryManager
     /// </summary>
     public partial class MainWindow : Window
     {
-        private bool _isSortingAscending = true;
-
         public MainWindow()
         {
             InitializeComponent();
@@ -46,17 +44,6 @@ namespace SpotifyLibraryManager
         private async void LoginBtn_Click(object sender, RoutedEventArgs e)
         {
             await Spotify.StartAuthentication();
-        }
-
-        private async void SyncBtn_Click(object sender, RoutedEventArgs e)
-        {
-            //Albums.ItemsSource = await AlbumsManager.SyncAlbums();
-        }
-
-        private void SortDirectionChanger_Click(object sender, RoutedEventArgs e)
-        {
-            _isSortingAscending = !_isSortingAscending;
-            //SortDirection.Text = _isSortingAscending ? "⋀" : "⋁";
         }
 
         private void MinimizeBtn_Click(object sender, RoutedEventArgs e)
