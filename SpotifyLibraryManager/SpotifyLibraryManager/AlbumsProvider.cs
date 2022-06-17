@@ -109,7 +109,7 @@ namespace SpotifyLibraryManager
                 }
 
                 await db.SaveChangesAsync();
-                return await db.Albums.OrderByDescending(album => album.LikeDate).ToListAsync();
+                return await db.Albums.Include(a => a.Artists).Include(a => a.Tags).OrderByDescending(album => album.LikeDate).ToListAsync();
             }
         }
 
