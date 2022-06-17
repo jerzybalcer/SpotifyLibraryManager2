@@ -30,7 +30,7 @@ namespace SpotifyLibraryManager.ViewModels
         }
         public async void LoadAllAlbums()
         {
-            var albumsFromDb = await AlbumsManager.GetAlbumsFromDb();
+            var albumsFromDb = await AlbumsProvider.GetAlbumsFromDb();
             AllAlbums = new ObservableCollection<Album>(albumsFromDb);
             VisibleAlbums = new ObservableCollection<Album>(albumsFromDb);
         }

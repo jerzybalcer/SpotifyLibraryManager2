@@ -100,7 +100,7 @@ namespace SpotifyLibraryManager.ViewModels
 
         public async void SyncAlbums(object param)
         {
-            var syncedAlbums = await AlbumsManager.SyncAlbums();
+            var syncedAlbums = await AlbumsProvider.SyncAlbums();
             LibraryManager.AllAlbums = new ObservableCollection<Album>(syncedAlbums);
             LibraryManager.VisibleAlbums = new ObservableCollection<Album>(syncedAlbums);
         }
