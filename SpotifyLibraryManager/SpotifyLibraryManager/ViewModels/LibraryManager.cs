@@ -1,9 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using SpotifyLibraryManager.Database;
 using SpotifyLibraryManager.Models;
-using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.Linq;
 
 namespace SpotifyLibraryManager.ViewModels
 {

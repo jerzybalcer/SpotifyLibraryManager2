@@ -1,5 +1,4 @@
-﻿using SpotifyLibraryManager.Database;
-using SpotifyLibraryManager.ViewModels;
+﻿using SpotifyLibraryManager.ViewModels;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
