@@ -40,6 +40,8 @@ namespace SpotifyLibraryManager.ViewModels
             LibraryManager = libraryManager;
             AddTagCommand = new Command(AddTag);
             RemoveTagCommand = new Command(RemoveTag);
+
+            LibraryManager.AlbumSelected += (s, e) => OnPropertyChanged(nameof(ArtistsString));
         }
 
         private async void AddTag(object param)

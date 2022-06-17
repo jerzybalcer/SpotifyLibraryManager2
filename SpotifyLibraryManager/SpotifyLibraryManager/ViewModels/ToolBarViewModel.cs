@@ -8,9 +8,14 @@ namespace SpotifyLibraryManager.ViewModels
 {
     public class ToolBarViewModel : ViewModelBase
     {
+        private string _sortBy = "LikeDate";
+
         public LibraryManager LibraryManager { get; private set; }
+        public bool IsSortingAscending { get; set; }
         public string SearchPhrase { get; set; }
         public Command SearchCommand { get; set; }
+        public Command SortCommand { get; set; }
+        public Command ToggleSortingDirectionCommand { get; set; }
         public Command SyncCommand { get; set; }
         public Command LoginCommand { get; set; }
 
@@ -61,7 +66,36 @@ namespace SpotifyLibraryManager.ViewModels
         
         public void SortAlbums(object param)
         {
+            _sortBy = (string)param;
 
+            if(_sortBy == "Artist")
+            {
+                if (IsSortingAscending)
+                {
+                    LibraryManager.VisibleAlbums = new ObservableCollection<Album>(LibraryManager.VisibleAlbums.OrderBy(a => a.Artists[0].Name));
+                }
+                else
+                {
+                    LibraryManager.VisibleAlbums = new ObservableCollection<Album>(LibraryManager.VisibleAlbums.OrderByDescending(a => a.Artists[0].Name));
+                }
+            }
+            else
+            {
+                if (IsSortingAscending)
+                {
+                    LibraryManager.VisibleAlbums = new ObservableCollection<Album>(LibraryManager.VisibleAlbums.OrderBy(a => a.GetType().GetProperty(_sortBy).GetValue(a, null)));
+                }
+                else
+                {
+                    LibraryManager.VisibleAlbums = new ObservableCollection<Album>(LibraryManager.VisibleAlbums.OrderByDescending(a => a.GetType().GetProperty(_sortBy).GetValue(a, null)));
+                }
+            }
+        }
+
+        public void ToggleSortingDirection(object param)
+        {
+            IsSortingAscending = !IsSortingAscending;
+            SortAlbums(_sortBy);
         }
 
         public async void SyncAlbums(object param)
@@ -84,6 +118,8 @@ namespace SpotifyLibraryManager.ViewModels
             LibraryManager.Filters.CollectionChanged += (s, e) => FilterAlbums(null);
 
             SearchCommand = new Command(SearchAlbums);
+            SortCommand = new Command(SortAlbums);
+            ToggleSortingDirectionCommand = new Command(ToggleSortingDirection);
             SyncCommand = new Command(SyncAlbums);
             LoginCommand = new Command(LoginToSpotify);
         }

@@ -22,8 +22,10 @@
         </Grid.ColumnDefinitions>
 
         <StackPanel Grid.Row="0" Grid.ColumnSpan="2">
-            <TextBlock x:Name="Title" Text="{Binding LibraryManager.SelectedAlbum.Title}" Foreground="White" FontSize="36" HorizontalAlignment="Center" Margin="5"/>
-            <TextBlock x:Name="Artists" Text="{Binding ArtistsString}" Foreground="#b3b3b3" FontSize="20" HorizontalAlignment="Center" Margin="5"/>
+            <TextBlock x:Name="Title" Text="{Binding LibraryManager.SelectedAlbum.Title}" Foreground="White" FontSize="36" TextWrapping="Wrap" TextAlignment="Center"
+                       HorizontalAlignment="Center" Margin="5"/>
+            <TextBlock x:Name="Artists" Text="{Binding ArtistsString, UpdateSourceTrigger=PropertyChanged}" Foreground="#b3b3b3" FontSize="20" TextWrapping="Wrap" 
+                       TextAlignment="Center" HorizontalAlignment="Center" Margin="5"/>
         </StackPanel>
 
         <TextBlock Text="Tags" Foreground="White" FontSize="30" Margin="10,0,0,0" FontWeight="DemiBold" Grid.Row="1"/>
