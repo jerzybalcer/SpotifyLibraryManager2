@@ -24,7 +24,7 @@
         <!--Refresh albums-->
         <Button Content="Sync" Foreground="White" Grid.Column="0" Style="{StaticResource ToolBarButtonStyle}"
                  Padding="10,0,10,0" HorizontalAlignment="Center" VerticalAlignment="Center" Height="22" 
-                 x:Name="SyncBtn" Margin="15,0,15,0" FontSize="14"/>
+                 x:Name="SyncBtn" Margin="15,0,15,0" FontSize="14" Command="{Binding SyncCommand}"/>
 
         <!--Sort Menu-->
         <StackPanel Orientation="Horizontal" Grid.Column="1" VerticalAlignment="Center" HorizontalAlignment="Center" x:Name="SortStackPanel" Margin="15,0,15,0">
@@ -37,7 +37,7 @@
                     <MenuItem Header="LikeDate" x:Name="SortByLikeDate" Margin="5,0,5,0" IsCheckable="True"/>
                 </MenuItem>
             </Menu>
-            <Button Style="{StaticResource ToolBarButtonStyle}"  Background="#383838" Foreground="White" Width="18" Height="18" 
+            <Button Style="{StaticResource ToolBarButtonStyle}" Background="#383838" Foreground="White" Width="18" Height="18" 
                     x:Name="SortDirectionChanger">
                 <TextBlock x:Name="SortDirection" Text="⋁" VerticalAlignment="Center"/>
             </Button>
@@ -83,14 +83,14 @@
         </Menu>-->
         <userControls:FilterMenu x:Name="FilterMenu" HorizontalAlignment="Center" HorizontalContentAlignment="Center" VerticalAlignment="Center" 
                                     Grid.Column="3" Margin="15,0,15,0"
-                                    Items="{Binding AllTags}" Filters="{Binding Filters, Mode=TwoWay}" MenuHeaderText="Filter">
+                                    Items="{Binding LibraryManager.AllTags}" Filters="{Binding LibraryManager.Filters, Mode=TwoWay}" MenuHeaderText="Filter">
         </userControls:FilterMenu>
 
         <!--User Menu-->
         <Menu x:Name="Menu" HorizontalAlignment="Center" HorizontalContentAlignment="Center" VerticalAlignment="Center" Grid.Column="4" Margin="15,0,15,0">
             <MenuItem Margin="5,0,5,0" x:Name="MenuUser" VerticalAlignment="Center"
                       VerticalContentAlignment="Center" Height="22" Foreground="White" Header="User">
-                <MenuItem Header="Login" x:Name="LoginBtn" Margin="5,0,5,0"/>
+                <MenuItem Header="Login" x:Name="LoginBtn" Margin="5,0,5,0" Command="{Binding LoginCommand}"/>
             </MenuItem>
         </Menu>
     </Grid>

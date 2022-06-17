@@ -30,7 +30,7 @@ namespace SpotifyLibraryManager.Pages
 
             var viewModel = DataContext as DetailsPanelViewModel;
 
-            var suggestion = viewModel.AllTags.Where(tag => tag.Name.ToLower().StartsWith(NewTag.Text.ToLower())).FirstOrDefault();
+            var suggestion = viewModel?.GetSuggestionTag();
 
             if (suggestion is not null)
             {

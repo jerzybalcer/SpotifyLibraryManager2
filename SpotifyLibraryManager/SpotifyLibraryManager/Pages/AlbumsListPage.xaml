@@ -10,7 +10,7 @@
 
     <Grid>
         <ScrollViewer x:Name="AlbumsScrollViewer" >
-            <ItemsControl x:Name="Albums" ItemsSource="{Binding VisibleAlbums}">
+            <ItemsControl x:Name="Albums" ItemsSource="{Binding LibraryManager.VisibleAlbums}">
                 <ItemsControl.ItemsPanel>
                     <ItemsPanelTemplate>
                         <UniformGrid Columns="3" Margin="0" VerticalAlignment="Top"/>

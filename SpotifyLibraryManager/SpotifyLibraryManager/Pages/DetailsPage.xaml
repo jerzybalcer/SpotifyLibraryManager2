@@ -22,7 +22,7 @@
         </Grid.ColumnDefinitions>
 
         <StackPanel Grid.Row="0" Grid.ColumnSpan="2">
-            <TextBlock x:Name="Title" Text="{Binding Album.Title}" Foreground="White" FontSize="36" HorizontalAlignment="Center" Margin="5"/>
+            <TextBlock x:Name="Title" Text="{Binding LibraryManager.SelectedAlbum.Title}" Foreground="White" FontSize="36" HorizontalAlignment="Center" Margin="5"/>
             <TextBlock x:Name="Artists" Text="{Binding ArtistsString}" Foreground="#b3b3b3" FontSize="20" HorizontalAlignment="Center" Margin="5"/>
         </StackPanel>
 
@@ -33,7 +33,7 @@
             <StackPanel Orientation="Horizontal">
                 <Grid>
                     <TextBox x:Name="NewTag" Style="{StaticResource CustomTextBox}" MinHeight="25" MinWidth="150" TextChanged="NewTag_TextChanged" 
-                             Margin="0,0,5,0" FontSize="14"/>
+                             Margin="0,0,5,0" FontSize="14" Text="{Binding NewTagText, Mode=OneWayToSource, UpdateSourceTrigger=PropertyChanged}"/>
                     <TextBlock IsHitTestVisible="False" Text="Enter tag name" VerticalAlignment="Center" HorizontalAlignment="Left" Margin="10,0,0,0" 
                                Foreground="White" FontSize="14">
                         <TextBlock.Style>
@@ -80,7 +80,7 @@
 
         <StackPanel Orientation="Vertical" Grid.Row="3" Margin="20,10,10,10">
             <TextBlock Text="Assigned" Foreground="#b3b3b3" FontSize="20" Margin="0,0,0,10" FontWeight="Medium"/>
-            <ItemsControl x:Name="TagList" ItemsSource="{Binding Album.Tags}">
+            <ItemsControl x:Name="TagList" ItemsSource="{Binding LibraryManager.SelectedAlbum.Tags}">
                 <ItemsControl.ItemsPanel>
                     <ItemsPanelTemplate>
                         <WrapPanel/>

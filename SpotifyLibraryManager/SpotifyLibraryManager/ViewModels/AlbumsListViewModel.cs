@@ -11,18 +11,18 @@ namespace SpotifyLibraryManager.ViewModels
 {
     public class AlbumsListViewModel : ViewModelBase
     {
-        public ObservableCollection<Album> VisibleAlbums { get; set; } = new ObservableCollection<Album>();
-        public LibraryManager LibraryManager { get; set; }
+        public LibraryManager LibraryManager { get; private set; }
 
-        public AlbumsListViewModel()
+        public AlbumsListViewModel(LibraryManager libraryManager)
         {
-            SelectAlbumCommand = new Command(SelectAlbum, null);
+            LibraryManager = libraryManager;
+            SelectAlbumCommand = new Command(SelectAlbum);
         }
 
         public Command SelectAlbumCommand { get; private set; }
         private void SelectAlbum(object album)
         {
-            LibraryManager.SelectAlbum((Album)album);
+            LibraryManager.SelectedAlbum = (Album)album;
         }
     }
 }

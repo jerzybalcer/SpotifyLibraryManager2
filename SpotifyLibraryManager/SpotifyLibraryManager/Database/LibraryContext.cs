@@ -9,7 +9,12 @@ namespace SpotifyLibraryManager.Database
         public DbSet<Artist> Artists { get; set; }
         public DbSet<Tag> Tags { get; set; }
 
+        public LibraryContext() : base()
+        {
+            Database.EnsureCreated();
+        }
+
         protected override void OnConfiguring(DbContextOptionsBuilder options)
-            => options.UseSqlite(@"Data Source=C:\Users\Jerzy\source\repos\SpotifyLibraryManager2\SpotifyLibraryManager\SpotifyLibraryManager\Database\Library.db");
+            => options.UseSqlite("Data Source="+ System.AppDomain.CurrentDomain.BaseDirectory + @"\Library.db");
     }
 }

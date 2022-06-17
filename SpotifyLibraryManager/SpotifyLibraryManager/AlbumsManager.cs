@@ -40,13 +40,24 @@ namespace SpotifyLibraryManager
             return albums;
         }
 
-        public static Album ConvertToDbAlbum(SavedAlbum spotifyAlbum)
+        public static Album ConvertToDbAlbum(SavedAlbum spotifyAlbum, ref List<Artist> allArtists)
         {
             var artists = new List<Artist>();
 
             foreach(var artist in spotifyAlbum.Album.Artists)
             {
-                artists.Add(new Artist { Name = artist.Name });
+                var existingArtist = allArtists.FirstOrDefault(ar => ar.Name == artist.Name);
+
+                if (existingArtist == null)
+                {
+                    Artist newArtist = new Artist { Name = artist.Name };
+                    artists.Add(newArtist);
+                    allArtists.Add(newArtist);
+                }
+                else
+                {
+                    artists.Add(existingArtist);
+                }
             }
 
             return new Album
@@ -78,12 +89,14 @@ namespace SpotifyLibraryManager
                     .Include(album => album.Tags)
                     .ToListAsync();
 
+                var allAritsts = await db.Artists.ToListAsync();
+
                 foreach (var albumFromSpotify in albumsFromSpotify)
                 {
                     if (albumsFromDb.FirstOrDefault(a => a.Title == albumFromSpotify.Album.Name
                          && a.Artists.FirstOrDefault()!.Name == albumFromSpotify.Album.Artists[0].Name) is null)
                     {
-                        db.Albums.Add(ConvertToDbAlbum(albumFromSpotify));
+                        db.Albums.Add(ConvertToDbAlbum(albumFromSpotify, ref allAritsts));
                     }
                 }
 

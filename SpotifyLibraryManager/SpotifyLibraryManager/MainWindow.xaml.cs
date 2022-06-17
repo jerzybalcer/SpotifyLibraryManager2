@@ -1,10 +1,5 @@
-﻿using SpotifyLibraryManager.Models;
-using SpotifyLibraryManager.Pages;
+﻿using SpotifyLibraryManager.Database;
 using SpotifyLibraryManager.ViewModels;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.Linq;
-using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
@@ -19,14 +14,12 @@ namespace SpotifyLibraryManager
         public MainWindow()
         {
             InitializeComponent();
-            var albumsList = new AlbumsListViewModel();
-            var detailsPanel = new DetailsPanelViewModel();
-            var toolBar = new ToolBarViewModel();
 
-            var libraryManager = new LibraryManager(albumsList, detailsPanel, toolBar);
-            albumsList.LibraryManager = libraryManager;
-            detailsPanel.LibraryManager = libraryManager;
-            toolBar.LibraryManager = libraryManager;
+            var libraryManager = new LibraryManager();
+
+            var albumsList = new AlbumsListViewModel(libraryManager);
+            var detailsPanel = new DetailsPanelViewModel(libraryManager);
+            var toolBar = new ToolBarViewModel(libraryManager);
 
             this.DataContext = libraryManager;
             AlbumsList.DataContext = albumsList;

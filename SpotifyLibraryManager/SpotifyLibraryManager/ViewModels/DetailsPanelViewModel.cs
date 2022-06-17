@@ -4,6 +4,7 @@ using SpotifyLibraryManager.Helpers;
 using SpotifyLibraryManager.Models;
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -12,10 +13,9 @@ namespace SpotifyLibraryManager.ViewModels
 {
     public class DetailsPanelViewModel : ViewModelBase
     {
-        public LibraryManager LibraryManager { get; set; }
-        public Album Album { get; set; }
-        public List<Tag> AllTags { get; set; }
+        public LibraryManager LibraryManager { get; private set; }
         public bool IsSuggestionPopupOpen { get; set; }
+        public string NewTagText { get; set; }
         public Command AddTagCommand { get; set; }
         public Command RemoveTagCommand { get; set; }
 
@@ -23,27 +23,27 @@ namespace SpotifyLibraryManager.ViewModels
         {
             get 
             {
-                if(Album is null)
+                if(LibraryManager.SelectedAlbum is null)
                 {
                     return string.Empty;
                 }
 
-                string returnString = Album.Artists[0].Name;
+                string returnString = LibraryManager.SelectedAlbum.Artists[0].Name;
 
-                for (var i = 1; i < Album.Artists.Count; i++)
+                for (var i = 1; i < LibraryManager.SelectedAlbum.Artists.Count; i++)
                 {
-                    returnString += ", " + Album.Artists[i].Name;
+                    returnString += ", " + LibraryManager.SelectedAlbum.Artists[i].Name;
                 }
 
                 return returnString;
             }
         }
 
-        public DetailsPanelViewModel()
+        public DetailsPanelViewModel(LibraryManager libraryManager)
         {
+            LibraryManager = libraryManager;
             AddTagCommand = new Command(AddTag);
             RemoveTagCommand = new Command(RemoveTag);
-            LoadAllTags();
         }
 
         private async void AddTag(object param)
@@ -56,9 +56,9 @@ namespace SpotifyLibraryManager.ViewModels
                 var thisAlbum = db.Albums
                     .Include(album => album.Tags)
                     .Include(album => album.Artists)
-                    .First(album => album.AlbumId == Album.AlbumId);
+                    .First(album => album.AlbumId == LibraryManager.SelectedAlbum.AlbumId);
 
-                if (AllTags.Exists(tag => tag.Name.ToLower() == tagName.ToLower()) == false)
+                if (LibraryManager.AllTags.ToList().Exists(tag => tag.Name.ToLower() == tagName.ToLower()) == false)
                 {
                     thisAlbum.Tags.Add(new Tag { Name = tagName, ColorHex = RandomHexGenerator.GenerateRandomHex() });
                 }
@@ -66,14 +66,13 @@ namespace SpotifyLibraryManager.ViewModels
                 {
                     if (thisAlbum.Tags.FirstOrDefault(tag => tag.Name.ToLower() == tagName.ToLower()) is null)
                     {
-                        thisAlbum.Tags.Add(AllTags.First(tag => tag.Name.ToLower() == tagName.ToLower()));
+                        thisAlbum.Tags.Add(LibraryManager.AllTags.First(tag => tag.Name.ToLower() == tagName.ToLower()));
                     }
                 }
                 await db.SaveChangesAsync();
-                Album = thisAlbum;
-                AllTags = await db.Tags.AsNoTracking().ToListAsync();
+                OnTagUpdate(thisAlbum);
+                LibraryManager.AllTags = new ObservableCollection<Tag>(await db.Tags.AsNoTracking().ToListAsync());
             }
-            LibraryManager.UpdateAlbum(Album);
         }
 
         private async void RemoveTag(object param)
@@ -85,24 +84,27 @@ namespace SpotifyLibraryManager.ViewModels
                 var thisAlbum = db.Albums
                     .Include(album => album.Tags)
                     .Include(album => album.Artists)
-                    .First(album => album.AlbumId == Album.AlbumId);
+                    .First(album => album.AlbumId == LibraryManager.SelectedAlbum.AlbumId);
 
                 var tagToRemove = thisAlbum.Tags.FindIndex(tag => tag.Name.ToLower() == tagName.ToLower());
 
                 thisAlbum.Tags.RemoveAt(tagToRemove);
 
                 await db.SaveChangesAsync();
-                Album = thisAlbum;
+                OnTagUpdate(thisAlbum);
             }
-            LibraryManager.UpdateAlbum(Album);
         }
 
-        private async void LoadAllTags()
+        public Tag? GetSuggestionTag()
         {
-            using (var db = new LibraryContext())
-            {
-                AllTags = await db.Tags.ToListAsync();
-            }
+            return LibraryManager.AllTags.Where(tag => tag.Name.ToLower().StartsWith(NewTagText.ToLower())).FirstOrDefault();
+        }
+
+        private void OnTagUpdate(Album targetAlbum)
+        {
+            LibraryManager.SelectedAlbum = targetAlbum;
+            LibraryManager.VisibleAlbums[LibraryManager.VisibleAlbums.ToList().FindIndex(a => a.AlbumId == targetAlbum.AlbumId)] = targetAlbum;
+            LibraryManager.AllAlbums[LibraryManager.AllAlbums.ToList().FindIndex(a => a.AlbumId == targetAlbum.AlbumId)] = targetAlbum;
         }
     }
 }

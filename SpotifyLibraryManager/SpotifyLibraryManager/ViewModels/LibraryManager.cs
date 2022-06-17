@@ -1,103 +1,46 @@
-﻿using SpotifyLibraryManager.Models;
-using System;
+﻿using Microsoft.EntityFrameworkCore;
+using SpotifyLibraryManager.Database;
+using SpotifyLibraryManager.Models;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Diagnostics;
-using SpotifyLibraryManager.Database;
-using Microsoft.EntityFrameworkCore;
 
 namespace SpotifyLibraryManager.ViewModels
 {
     public class LibraryManager : ViewModelBase
     {
-        public List<Album> Albums { get; set; }
-        public List<Tag> AllTags { get; set; }
-        public DetailsPanelViewModel DetailsPanel { get; set; }
-        public ToolBarViewModel ToolBar { get; set; }
-        public AlbumsListViewModel AlbumsList { get; set; }
+        // events to handle
+        // all tags change (add, remove), affected: toolbar, details
+        // filters change (check, uncheck), affected: toolbar, albumsList
+        // albums change (sort, filter, search, sync), affected: albumsList, details
+        // album change (tag assigned, tag removed), affected: details; album as parameter
 
-        public LibraryManager(AlbumsListViewModel albumsList, DetailsPanelViewModel detailsPanel, ToolBarViewModel toolBar)
+        public ObservableCollection<Album> AllAlbums { get; set; }
+        public ObservableCollection<Album> VisibleAlbums { get; set; }
+        public ObservableCollection<Tag> AllTags { get; set; }
+        public ObservableCollection<Tag> Filters { get; set; }
+        public Album SelectedAlbum { get; set; }
+
+        public LibraryManager()
         {
-            AlbumsList = albumsList;
-            DetailsPanel = detailsPanel;
-            ToolBar = toolBar;
-            ReloadAlbums();
+            LoadAllAlbums();
             LoadAllTags();
-            ToolBar.AllTags = AllTags;
-        }
-        
-        public async void SelectAlbum(Album album)
-        {
-            DetailsPanel.Album = album;
-            DetailsPanel.AllTags = AllTags;
+            Filters = new ObservableCollection<Tag>();
         }
 
-        public async void ReloadAlbums()
+        ////////////////////////////////////////////////////////////
+        public async void LoadAllAlbums()
         {
-            Albums = await AlbumsManager.GetAlbumsFromDb();
-            AlbumsList.VisibleAlbums = new ObservableCollection<Album>(Albums);
+            var albumsFromDb = await AlbumsManager.GetAlbumsFromDb();
+            AllAlbums = new ObservableCollection<Album>(albumsFromDb);
+            VisibleAlbums = new ObservableCollection<Album>(albumsFromDb);
         }
-
         public async void LoadAllTags()
         {
             using (var db = new LibraryContext())
             {
-                AllTags = await db.Tags.ToListAsync();
+                AllTags = new ObservableCollection<Tag>(await db.Tags.ToListAsync());
             }
-        }
-
-        public void UpdateAlbum(Album album)
-        {
-            AlbumsList.VisibleAlbums[AlbumsList.VisibleAlbums.ToList().FindIndex(a => a.AlbumId == album.AlbumId)] = album;
-            Albums[Albums.FindIndex(a => a.AlbumId == album.AlbumId)] = album;
-        }
-
-        public void FilterAlbums()
-        {
-            var matching = new List<Album>();
-
-            foreach (var album in Albums)
-            {
-                if (ToolBar.Filters.All(filter => album.Tags.Any(tag => tag.Name == filter.Name)))
-                {
-                    matching.Add(album);
-                }
-            }
-
-            AlbumsList.VisibleAlbums = new ObservableCollection<Album>(matching);
-        }
-
-        public void SearchAlbums(string searchPhrase)
-        {
-            if(string.IsNullOrEmpty(searchPhrase))
-            {
-                AlbumsList.VisibleAlbums = new ObservableCollection<Album>(Albums);
-                return;
-            }
-
-            List<Album> matching = new List<Album>();
-            
-            foreach(var album in Albums)
-            {
-                foreach(var artist in album.Artists)
-                {
-                    if (artist.Name.ToLower().Contains(searchPhrase.ToLower()))
-                    {
-                        matching.Add(album);
-                        continue;
-                    }
-                }
-
-                if (album.Title.ToLower().Contains(searchPhrase.ToLower()))
-                {
-                    matching.Add(album);
-                }
-            }
-
-            AlbumsList.VisibleAlbums = new ObservableCollection<Album>(matching);
         }
     }
 }
