@@ -60,8 +60,9 @@
         <!--Search Bar-->
         <StackPanel Orientation="Horizontal" Grid.Column="2" VerticalAlignment="Center" x:Name="SearchStackPanel" Margin="15,0,15,0">
             <Grid>
-                <TextBox Text="{Binding SearchPhrase}" Style="{StaticResource CustomTextBox}" x:Name="SearchText" Width="100" Height="24" 
-                     VerticalAlignment="Center" HorizontalAlignment="Right" Background="#383838" Foreground="White" FontSize="14" Padding="10,2,10,2"/>
+                <TextBox Style="{StaticResource CustomTextBox}" x:Name="SearchText" Width="100" Height="24" 
+                     VerticalAlignment="Center" HorizontalAlignment="Right" Background="#383838" Foreground="White" FontSize="14" Padding="10,2,10,2"
+                         PreviewKeyDown="SearchText_PreviewKeyDown" GotKeyboardFocus="SearchText_GotKeyboardFocus"/>
                 <TextBlock IsHitTestVisible="False" Text="Search" FontSize="14" VerticalAlignment="Center" HorizontalAlignment="Left" Margin="10,0,0,0" Foreground="White">
                     <TextBlock.Style>
                         <Style TargetType="{x:Type TextBlock}">
@@ -76,7 +77,7 @@
                 </TextBlock>
             </Grid>
             <Button x:Name="SearchBtn" Style="{StaticResource ToolBarButtonStyle}" Background="#383838" Foreground="White" 
-                    Width="18" Height="18" IsDefault="True" Command="{Binding SearchCommand}">
+                    Width="18" Height="18" Command="{Binding SearchCommand}" CommandParameter="{Binding ElementName=SearchText,Path=Text}">
                 <TextBlock Text="🔎︎" FontSize="12" VerticalAlignment="Center"/>
             </Button>
         </StackPanel>

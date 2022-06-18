@@ -21,7 +21,9 @@ namespace SpotifyLibraryManager.ViewModels
 
         public void SearchAlbums(object param)
         {
-            if (string.IsNullOrEmpty(SearchPhrase))
+            string searchPhrase = (string)param;
+
+            if (string.IsNullOrEmpty(searchPhrase))
             {
                 LibraryManager.VisibleAlbums = new ObservableCollection<Album>(LibraryManager.AllAlbums);
                 return;
@@ -33,14 +35,14 @@ namespace SpotifyLibraryManager.ViewModels
             {
                 foreach (var artist in album.Artists)
                 {
-                    if (artist.Name.ToLower().Contains(SearchPhrase.ToLower()))
+                    if (artist.Name.ToLower().Contains(searchPhrase.ToLower()))
                     {
                         matching.Add(album);
                         continue;
                     }
                 }
 
-                if (album.Title.ToLower().Contains(SearchPhrase.ToLower()))
+                if (album.Title.ToLower().Contains(searchPhrase.ToLower()))
                 {
                     matching.Add(album);
                 }
