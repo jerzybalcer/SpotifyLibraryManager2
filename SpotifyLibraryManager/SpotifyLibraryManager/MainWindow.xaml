@@ -18,7 +18,7 @@
             <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
 
-        <Frame x:Name="AlbumsList" Grid.Column="0" Grid.Row="1" HorizontalAlignment="Left" Margin="5" Source="/Pages/AlbumsListPage.xaml" LoadCompleted="Frame_LoadCompleted"/>
+        <Frame x:Name="AlbumsList" Grid.Column="0" Grid.Row="1" HorizontalAlignment="Left" Margin="5,10,5,5" Source="/Pages/AlbumsListPage.xaml" LoadCompleted="Frame_LoadCompleted"/>
 
         <Frame x:Name="DetailsPanel" Grid.Column="1" Grid.Row="1" HorizontalAlignment="Stretch" Source="/Pages/DetailsPage.xaml" LoadCompleted="Frame_LoadCompleted" NavigationUIVisibility="Hidden"/>
 

@@ -10,6 +10,9 @@ namespace SpotifyLibraryManager
     /// </summary>
     public partial class MainWindow : Window
     {
+        private const int DefaultWidth = 1280;
+        private const int DefaultHeight = 720;
+        private bool _isMaximized = false;
         public MainWindow()
         {
             InitializeComponent();
@@ -64,16 +67,23 @@ namespace SpotifyLibraryManager
                 DragMove();
         }
 
-        private static void ToggleMaximized()
+        private void ToggleMaximized()
         {
-            if (App.Current.MainWindow.WindowState == WindowState.Maximized)
+            if (_isMaximized)
             {
-                App.Current.MainWindow.WindowState = WindowState.Normal;
+                App.Current.MainWindow.Top = SystemParameters.WorkArea.Bottom / 2 - DefaultHeight / 2;
+                App.Current.MainWindow.Left = SystemParameters.WorkArea.Right / 2 - DefaultWidth / 2;
+                App.Current.MainWindow.Width = DefaultWidth;
+                App.Current.MainWindow.Height = DefaultHeight;
             }
-            else if (App.Current.MainWindow.WindowState == WindowState.Normal)
+            else
             {
-                App.Current.MainWindow.WindowState = WindowState.Maximized;
+                App.Current.MainWindow.Top = SystemParameters.WorkArea.Top;
+                App.Current.MainWindow.Left = SystemParameters.WorkArea.Left;
+                App.Current.MainWindow.Width = SystemParameters.WorkArea.Width;
+                App.Current.MainWindow.Height = SystemParameters.WorkArea.Height;
             }
+            _isMaximized = !_isMaximized;
         }
 
         private void Frame_LoadCompleted(object sender, System.Windows.Navigation.NavigationEventArgs e)
