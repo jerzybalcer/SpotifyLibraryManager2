@@ -21,6 +21,10 @@
             <ColumnDefinition Width="*"/>
         </Grid.ColumnDefinitions>
 
+        <Grid x:Name="NoAlbumSelected" Background="#121212" Panel.ZIndex="2" Grid.ColumnSpan="2" Grid.RowSpan="4">
+            <TextBlock Text="No album selected." Foreground="#b3b3b3" FontSize="32" VerticalAlignment="Center" HorizontalAlignment="Center"/>
+        </Grid>
+
         <Border x:Name="ImageBorder" CornerRadius="5" BorderBrush="#282828" BorderThickness="10" Grid.ColumnSpan="2" Grid.Row="0" 
                 HorizontalAlignment="Center" Margin="5" Background="#282828">
             <Image Source="{Binding LibraryManager.SelectedAlbum.CoverUrl}" Stretch="Uniform"/>
@@ -28,7 +32,7 @@
 
         <StackPanel Grid.Row="1" x:Name="AlbumsInfoContainer" HorizontalAlignment="Center" Grid.ColumnSpan="2">
             <TextBlock x:Name="Title" Text="{Binding LibraryManager.SelectedAlbum.Title}" Foreground="White" FontSize="28" TextWrapping="Wrap" TextAlignment="Center"
-                       HorizontalAlignment="Center" Margin="5" ToolTip="{Binding LibraryManager.SelectedAlbum.Title}"/>
+                       HorizontalAlignment="Center" Margin="5" ToolTip="{Binding LibraryManager.SelectedAlbum.Title}" SizeChanged="Title_SizeChanged"/>
             <TextBlock x:Name="Artists" Text="{Binding ArtistsString, UpdateSourceTrigger=PropertyChanged}" Foreground="#b3b3b3" FontSize="18" TextWrapping="Wrap" 
                        TextAlignment="Center" HorizontalAlignment="Center" Margin="5" ToolTip="{Binding ArtistsString, UpdateSourceTrigger=PropertyChanged}"/>
         </StackPanel>

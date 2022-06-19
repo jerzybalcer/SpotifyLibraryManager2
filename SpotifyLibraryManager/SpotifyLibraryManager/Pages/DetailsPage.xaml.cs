@@ -121,5 +121,17 @@ namespace SpotifyLibraryManager.Pages
                 NoTagsText.Visibility = Visibility.Collapsed;
             }
         }
+
+        private void Title_SizeChanged(object sender, SizeChangedEventArgs e)
+        {
+            if (Artists.Text.Length == 0)
+            {
+                NoAlbumSelected.Visibility = Visibility.Visible;
+            }
+            else
+            {
+                NoAlbumSelected.Visibility = Visibility.Collapsed;
+            }
+        }
     }
 }

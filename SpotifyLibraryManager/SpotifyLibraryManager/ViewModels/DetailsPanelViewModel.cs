@@ -21,7 +21,7 @@ namespace SpotifyLibraryManager.ViewModels
         {
             get 
             {
-                if(LibraryManager.SelectedAlbum is null)
+                if(LibraryManager.SelectedAlbum is null || LibraryManager.SelectedAlbum.Artists is null)
                 {
                     return string.Empty;
                 }
