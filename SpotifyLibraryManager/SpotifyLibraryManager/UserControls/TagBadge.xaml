@@ -13,7 +13,7 @@
             CornerRadius="15" HorizontalAlignment="Left" Padding="10,5,10,5" Margin="5" SnapsToDevicePixels="True"
             DataContext="{Binding Path=DataContext, ElementName=ThisControl}">
         <StackPanel Orientation="Horizontal">
-            <TextBlock Foreground="White" Text="{Binding Name}" FontSize="16" FontWeight="DemiBold" x:Name="TagNameTxt" 
+            <TextBlock Foreground="White" Text="{Binding Name}" FontSize="15" FontWeight="DemiBold" x:Name="TagNameTxt" 
                        HorizontalAlignment="Left" VerticalAlignment="Center"/>
             <TextBlock x:Name="Cross" Foreground="White" Text="✖" FontSize="10" FontWeight="DemiBold" 
                        VerticalAlignment="Center" HorizontalAlignment="Right" Margin="5,0,0,0" Cursor="Hand" 

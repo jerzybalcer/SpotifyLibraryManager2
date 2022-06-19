@@ -13,18 +13,20 @@ namespace SpotifyLibraryManager
         private const int DefaultWidth = 1280;
         private const int DefaultHeight = 720;
         private bool _isMaximized = false;
+        private AlbumsListViewModel _albumsListViewModel;
+
         public MainWindow()
         {
             InitializeComponent();
 
             var libraryManager = new LibraryManager();
 
-            var albumsList = new AlbumsListViewModel(libraryManager);
+            _albumsListViewModel = new AlbumsListViewModel(libraryManager);
             var detailsPanel = new DetailsPanelViewModel(libraryManager);
             var toolBar = new ToolBarViewModel(libraryManager);
 
             this.DataContext = libraryManager;
-            AlbumsList.DataContext = albumsList;
+            AlbumsList.DataContext = _albumsListViewModel;
             DetailsPanel.DataContext = detailsPanel;
             ToolBar.DataContext = toolBar;
         }
@@ -75,6 +77,7 @@ namespace SpotifyLibraryManager
                 App.Current.MainWindow.Left = SystemParameters.WorkArea.Right / 2 - DefaultWidth / 2;
                 App.Current.MainWindow.Width = DefaultWidth;
                 App.Current.MainWindow.Height = DefaultHeight;
+                _albumsListViewModel.Columns = 4;
             }
             else
             {
@@ -82,6 +85,7 @@ namespace SpotifyLibraryManager
                 App.Current.MainWindow.Left = SystemParameters.WorkArea.Left;
                 App.Current.MainWindow.Width = SystemParameters.WorkArea.Width;
                 App.Current.MainWindow.Height = SystemParameters.WorkArea.Height;
+                _albumsListViewModel.Columns = 6;
             }
             _isMaximized = !_isMaximized;
         }

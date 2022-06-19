@@ -13,7 +13,7 @@
             <ItemsControl x:Name="Albums" ItemsSource="{Binding LibraryManager.VisibleAlbums}">
                 <ItemsControl.ItemsPanel>
                     <ItemsPanelTemplate>
-                        <UniformGrid Columns="3" Margin="0" VerticalAlignment="Top"/>
+                        <UniformGrid Columns="{Binding Columns}" Margin="0" VerticalAlignment="Top"/>
                     </ItemsPanelTemplate>
                 </ItemsControl.ItemsPanel>
                 <ItemsControl.ItemTemplate>
