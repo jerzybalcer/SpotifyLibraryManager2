@@ -44,7 +44,10 @@ namespace SpotifyLibraryManager.ViewModels
 
                 if (album.Title.ToLower().Contains(searchPhrase.ToLower()))
                 {
-                    matching.Add(album);
+                    if (!matching.Contains(album))
+                    {
+                        matching.Add(album);
+                    }
                 }
             }
 
