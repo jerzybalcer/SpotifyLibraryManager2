@@ -20,7 +20,7 @@
 
         <Frame x:Name="AlbumsList" Grid.Column="0" Grid.Row="1" HorizontalAlignment="Left" Margin="5,10,5,5" Source="/Pages/AlbumsListPage.xaml" LoadCompleted="Frame_LoadCompleted"/>
 
-        <Frame x:Name="DetailsPanel" Grid.Column="1" Grid.Row="1" HorizontalAlignment="Stretch" Source="/Pages/DetailsPage.xaml" LoadCompleted="Frame_LoadCompleted" NavigationUIVisibility="Hidden"/>
+        <Frame x:Name="DetailsPanel" Grid.Column="1" Grid.Row="1" HorizontalAlignment="Stretch" Margin="0,10,10,5" Source="/Pages/DetailsPage.xaml" LoadCompleted="Frame_LoadCompleted" NavigationUIVisibility="Hidden"/>
 
         <Grid x:Name="TitleBar" Background="#202020" MouseDown="TitleBar_MouseDown" Height="35" Grid.Row="0" Grid.ColumnSpan="2">
             <Grid.ColumnDefinitions>
