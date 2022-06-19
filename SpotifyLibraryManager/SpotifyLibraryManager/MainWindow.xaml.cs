@@ -12,6 +12,7 @@ namespace SpotifyLibraryManager
     {
         private const int DefaultWidth = 1280;
         private const int DefaultHeight = 720;
+        private const int PixelsPerAlbum = 231;
         private bool _isMaximized = false;
         private AlbumsListViewModel _albumsListViewModel;
 
@@ -87,6 +88,7 @@ namespace SpotifyLibraryManager
                 App.Current.MainWindow.Height = SystemParameters.WorkArea.Height;
                 _albumsListViewModel.Columns = 6;
             }
+            AlbumsListColumn.MinWidth = _albumsListViewModel.Columns * PixelsPerAlbum;
             _isMaximized = !_isMaximized;
         }
 

@@ -9,7 +9,7 @@
       Title="AlbumsListPage">
 
     <Grid>
-        <ScrollViewer x:Name="AlbumsScrollViewer" >
+        <ScrollViewer x:Name="AlbumsScrollViewer">
             <ItemsControl x:Name="Albums" ItemsSource="{Binding LibraryManager.VisibleAlbums}">
                 <ItemsControl.ItemsPanel>
                     <ItemsPanelTemplate>
