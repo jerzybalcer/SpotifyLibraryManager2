@@ -83,23 +83,30 @@
         </StackPanel>
 
         <!--Filter Menu-->
-        <!--<Menu x:Name="FilterMenu" HorizontalAlignment="Center" HorizontalContentAlignment="Center" VerticalAlignment="Center" Grid.Column="3" Margin="15,0,15,0">
-            <MenuItem Margin="5,0,5,0" x:Name="FilterMenuTopItem" VerticalAlignment="Center" 
-                      VerticalContentAlignment="Center" Height="22" Foreground="White" Header="Filter" ItemsSource="{Binding AllTags}">
-                <MenuItem.ItemContainerStyle>
-                    <Style TargetType="{x:Type MenuItem}">
-                        <Setter Property="Header" Value="{Binding Name}"/>
-                        <Setter Property="Margin" Value="5,0,5,0"/>
-                        <Setter Property="IsCheckable" Value="True"/>
-                        <Setter Property="Background" Value="{Binding ColorHex, Converter={StaticResource HexBrushConverter}}"/>
-                    </Style>
-                </MenuItem.ItemContainerStyle>
-            </MenuItem>
-        </Menu>-->
-        <userControls:FilterMenu x:Name="FilterMenu" HorizontalAlignment="Center" HorizontalContentAlignment="Center" VerticalAlignment="Center" 
-                                    Grid.Column="3" Margin="15,0,15,0"
+        <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="Center" 
+                                    Grid.Column="3" Margin="15,0,15,0">
+            <userControls:FilterMenu x:Name="FilterMenu" HorizontalContentAlignment="Center"
                                     Items="{Binding LibraryManager.AllTags}" Filters="{Binding LibraryManager.Filters, Mode=TwoWay}" MenuHeaderText="Filter">
-        </userControls:FilterMenu>
+            </userControls:FilterMenu>
+            <Button Style="{StaticResource ToolBarButtonStyle}" Background="#383838" Foreground="White" Width="18" Height="18" 
+                    x:Name="FilterTypeChangeButton" Command="{Binding ChangeFilterTypeCommand}">
+                <TextBlock x:Name="FilterType" VerticalAlignment="Center">
+                    <TextBlock.Style>
+                        <Style TargetType="{x:Type TextBlock}">
+                            <Setter Property="Text" Value="&amp;"/>
+                            <Style.Triggers>
+                                <DataTrigger Binding="{Binding AreAllFiltersRequired}" Value="False">
+                                    <Setter Property="Text" Value="|"/>
+                                </DataTrigger>
+                                <DataTrigger Binding="{Binding AreAllFiltersRequired}" Value="True">
+                                    <Setter Property="Text" Value="&amp;"/>
+                                </DataTrigger>
+                            </Style.Triggers>
+                        </Style>
+                    </TextBlock.Style>
+                </TextBlock>
+            </Button>
+        </StackPanel>
 
         <!--User Menu-->
         <Menu x:Name="Menu" HorizontalAlignment="Center" HorizontalContentAlignment="Center" VerticalAlignment="Center" Grid.Column="4" Margin="15,0,15,0">

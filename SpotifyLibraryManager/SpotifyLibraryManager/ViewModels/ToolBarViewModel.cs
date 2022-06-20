@@ -13,11 +13,13 @@ namespace SpotifyLibraryManager.ViewModels
         public LibraryManager LibraryManager { get; private set; }
         public bool IsSortingAscending { get; set; }
         public string SearchPhrase { get; set; }
+        public bool AreAllFiltersRequired { get; set; } = true;
         public Command SearchCommand { get; set; }
         public Command SortCommand { get; set; }
         public Command ToggleSortingDirectionCommand { get; set; }
         public Command SyncCommand { get; set; }
         public Command LoginCommand { get; set; }
+        public Command ChangeFilterTypeCommand { get; set; }
 
         public void SearchAlbums(object param)
         {
@@ -60,9 +62,19 @@ namespace SpotifyLibraryManager.ViewModels
 
             foreach (var album in LibraryManager.AllAlbums)
             {
-                if (LibraryManager.Filters.All(filter => album.Tags.Any(tag => tag.Name == filter.Name)))
+                if (AreAllFiltersRequired)
                 {
-                    matching.Add(album);
+                    if (LibraryManager.Filters.All(filter => album.Tags.Any(tag => tag.Name == filter.Name)))
+                    {
+                        matching.Add(album);
+                    }
+                }
+                else
+                {
+                    if (LibraryManager.Filters.Any(filter => album.Tags.Any(tag => tag.Name == filter.Name)))
+                    {
+                        matching.Add(album);
+                    }
                 }
             }
 
@@ -103,6 +115,12 @@ namespace SpotifyLibraryManager.ViewModels
             SortAlbums(_sortBy);
         }
 
+        public void ChangeFilterType(object param)
+        {
+            AreAllFiltersRequired = !AreAllFiltersRequired;
+            FilterAlbums(null);
+        }
+
         public async void SyncAlbums(object param)
         {
             LibraryManager.SelectedAlbum = new Album();
@@ -128,6 +146,7 @@ namespace SpotifyLibraryManager.ViewModels
             ToggleSortingDirectionCommand = new Command(ToggleSortingDirection);
             SyncCommand = new Command(SyncAlbums);
             LoginCommand = new Command(LoginToSpotify);
+            ChangeFilterTypeCommand = new Command(ChangeFilterType);
         }
     }
 }
