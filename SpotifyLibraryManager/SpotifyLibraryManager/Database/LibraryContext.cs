@@ -1,10 +1,14 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using SpotifyLibraryManager.Models;
+using System;
+using System.IO;
 
 namespace SpotifyLibraryManager.Database
 {
     public class LibraryContext : DbContext
     {
+        private string _databaseLocationPath = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments) + @"\SpotifyLibraryManager";
+
         public DbSet<Album> Albums { get; set; }
         public DbSet<Artist> Artists { get; set; }
         public DbSet<Tag> Tags { get; set; }
@@ -15,6 +19,9 @@ namespace SpotifyLibraryManager.Database
         }
 
         protected override void OnConfiguring(DbContextOptionsBuilder options)
-            => options.UseSqlite("Data Source="+ System.AppDomain.CurrentDomain.BaseDirectory + @"\Library.db");
+        {
+            Directory.CreateDirectory(_databaseLocationPath);
+            options.UseSqlite("Data Source=" + _databaseLocationPath + @"\Library.db");
+        }
     }
 }
