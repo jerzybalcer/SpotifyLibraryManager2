@@ -5,6 +5,7 @@ using SpotifyLibraryManager.Models;
 using System.Collections.ObjectModel;
 using System.Diagnostics;
 using System.Linq;
+using System.Windows;
 
 namespace SpotifyLibraryManager.ViewModels
 {
@@ -16,6 +17,7 @@ namespace SpotifyLibraryManager.ViewModels
         public Command AddTagCommand { get; set; }
         public Command RemoveTagCommand { get; set; }
         public Command OpenWithSpotifyCommand { get; private set; }
+        public Command CopyLinkCommand { get; private set; }
 
         public string ArtistsString
         {
@@ -43,6 +45,7 @@ namespace SpotifyLibraryManager.ViewModels
             AddTagCommand = new Command(AddTag);
             RemoveTagCommand = new Command(RemoveTag);
             OpenWithSpotifyCommand = new Command(OpenWithSpotify);
+            CopyLinkCommand = new Command(CopyLink);
 
             LibraryManager.AlbumSelected += (s, e) => OnPropertyChanged(nameof(ArtistsString));
         }
@@ -121,6 +124,11 @@ namespace SpotifyLibraryManager.ViewModels
                 browser.StartInfo.FileName = "https://www.spotify.com/us/download/other/";
                 browser.Start();
             }
+        }
+
+        private void CopyLink(object obj)
+        {
+            Clipboard.SetText(LibraryManager.SelectedAlbum.ExternalUrl);
         }
     }
 }

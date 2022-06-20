@@ -17,7 +17,7 @@
         </Grid.RowDefinitions>
 
         <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="*"/>
+            <ColumnDefinition Width="7*"/>
             <ColumnDefinition Width="*"/>
         </Grid.ColumnDefinitions>
 
@@ -29,6 +29,45 @@
                 HorizontalAlignment="Center" Margin="5" Background="#282828">
             <Image Source="{Binding LibraryManager.SelectedAlbum.CoverUrl}" Stretch="Uniform"/>
         </Border>
+
+        <StackPanel x:Name="ExternalLinks" Grid.Column="1" Grid.Row="0" HorizontalAlignment="Center" VerticalAlignment="Top" Orientation="Vertical">
+            <Border x:Name="OpenWithSpotifyButton"  CornerRadius="20" HorizontalAlignment="Center" VerticalAlignment="Top"
+                Padding="15" Margin="5">
+                <Border.Style>
+                    <Style TargetType="{x:Type Border}">
+                        <Style.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter Property="Background" Value="#575757"/>
+                            </Trigger>
+                            <Trigger Property="IsMouseOver" Value="False">
+                                <Setter Property="Background" Value="#282828"/>
+                            </Trigger>
+                        </Style.Triggers>
+                    </Style>
+                </Border.Style>
+                <Border.InputBindings>
+                    <MouseBinding MouseAction="LeftClick" Command="{Binding OpenWithSpotifyCommand}"/>
+                </Border.InputBindings>
+            </Border>
+            <Border x:Name="CopyLinkButton" CornerRadius="20" HorizontalAlignment="Center" VerticalAlignment="Top"
+                Padding="15" Margin="5">
+                <Border.Style>
+                    <Style TargetType="{x:Type Border}">
+                        <Style.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter Property="Background" Value="#575757"/>
+                            </Trigger>
+                            <Trigger Property="IsMouseOver" Value="False">
+                                <Setter Property="Background" Value="#282828"/>
+                            </Trigger>
+                        </Style.Triggers>
+                    </Style>
+                </Border.Style>
+                <Border.InputBindings>
+                    <MouseBinding MouseAction="LeftClick" Command="{Binding CopyLinkCommand}"/>
+                </Border.InputBindings>
+            </Border>
+        </StackPanel>
 
         <StackPanel Grid.Row="1" x:Name="AlbumsInfoContainer" HorizontalAlignment="Center" Grid.ColumnSpan="2">
             <TextBlock x:Name="Title" Text="{Binding LibraryManager.SelectedAlbum.Title}" Foreground="White" FontSize="28" TextWrapping="Wrap" TextAlignment="Center"
@@ -80,27 +119,6 @@
         </Grid>
 
         <StackPanel Grid.Row="3" Margin="20,0,0,10" Orientation="Horizontal">
-            <!--<TextBlock Text="New" Foreground="#b3b3b3" FontSize="18" FontWeight="Medium" Margin="0,0,0,10" Visibility="Collapsed"/>-->
-            <!--<StackPanel Orientation="Horizontal" Visibility="Collapsed">
-                <Grid>
-                    <TextBox x:Name="NewTag" Style="{StaticResource CustomTextBox}" MinHeight="25" MinWidth="150" TextChanged="NewTag_TextChanged" 
-                             Margin="0,0,5,0" FontSize="14" Text="{Binding NewTagText, Mode=OneWayToSource, UpdateSourceTrigger=PropertyChanged}"/>
-                    <TextBlock IsHitTestVisible="False" Text="Enter tag name" VerticalAlignment="Center" HorizontalAlignment="Left" Margin="10,0,0,0" 
-                               Foreground="White" FontSize="14">
-                        <TextBlock.Style>
-                            <Style TargetType="{x:Type TextBlock}">
-                                <Setter Property="Visibility" Value="Collapsed"/>
-                                <Style.Triggers>
-                                    <DataTrigger Binding="{Binding Text, ElementName=NewTag}" Value="">
-                                        <Setter Property="Visibility" Value="Visible"/>
-                                    </DataTrigger>
-                                </Style.Triggers>
-                            </Style>
-                        </TextBlock.Style>
-                    </TextBlock>
-                </Grid>
-            </StackPanel>-->
-
             <Popup x:Name="SuggestionPopup" Margin="0,0,0,10" PlacementTarget="{Binding ElementName=NewTag}" HorizontalAlignment="Center" 
                    AllowsTransparency="True" PopupAnimation="Slide" VerticalOffset="3" IsOpen="{Binding IsSuggestionPopupOpen, Mode=TwoWay}" StaysOpen="False">
                 <Border Padding="5"
