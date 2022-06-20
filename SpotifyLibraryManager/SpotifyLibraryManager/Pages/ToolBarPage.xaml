@@ -23,11 +23,11 @@
 
         <!--Refresh albums-->
         <Button Content="Sync" Foreground="White" Grid.Column="0" Style="{StaticResource ToolBarButtonStyle}"
-                 Padding="10,0,10,0" HorizontalAlignment="Center" VerticalAlignment="Center" Height="22" 
-                 x:Name="SyncBtn" Margin="15,0,15,0" FontSize="14" Command="{Binding SyncCommand}"/>
+                 Padding="10,0,10,0" HorizontalAlignment="Center" VerticalAlignment="Stretch" 
+                 x:Name="SyncBtn" Margin="15,0,15,0" FontSize="16" Command="{Binding SyncCommand}"/>
 
         <!--Sort Menu-->
-        <StackPanel Orientation="Horizontal" Grid.Column="1" VerticalAlignment="Center" HorizontalAlignment="Center" x:Name="SortStackPanel" Margin="15,0,15,0">
+        <StackPanel Orientation="Horizontal" Grid.Column="1" VerticalAlignment="Stretch" HorizontalAlignment="Center" x:Name="SortStackPanel" Margin="15,0,15,0">
             <!--<Menu x:Name="SortMenu" HorizontalAlignment="Center" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" 
                   VerticalAlignment="Center">
                 <MenuItem Header="Sort By" Foreground="White" Margin="5,0,5,0" VerticalContentAlignment="Center" VerticalAlignment="Center" Height="22" x:Name="SortTopItem">
@@ -38,7 +38,7 @@
                 </MenuItem>
             </Menu>-->
             <userControls:SortMenu CheckedOption="{Binding SortBy, Mode=TwoWay}"/>
-            <Button Style="{StaticResource ToolBarButtonStyle}" Background="#383838" Foreground="White" Width="18" Height="18" 
+            <Button Style="{StaticResource ToolBarButtonStyle}" Background="#383838" Foreground="White" Width="20" Height="20" 
                     x:Name="SortDirectionChanger" Command="{Binding ToggleSortingDirectionCommand}">
                 <TextBlock x:Name="SortDirection" VerticalAlignment="Center">
                     <TextBlock.Style>
@@ -59,12 +59,12 @@
         </StackPanel>
 
         <!--Search Bar-->
-        <StackPanel Orientation="Horizontal" Grid.Column="2" VerticalAlignment="Center" x:Name="SearchStackPanel" Margin="15,0,15,0">
+        <StackPanel Orientation="Horizontal" Grid.Column="2" VerticalAlignment="Stretch" x:Name="SearchStackPanel" Margin="15,0,15,0">
             <Grid>
-                <TextBox Style="{StaticResource CustomTextBox}" x:Name="SearchText" Width="100" Height="24" 
-                     VerticalAlignment="Center" HorizontalAlignment="Right" Background="#383838" Foreground="White" FontSize="14" Padding="10,2,10,2"
+                <TextBox Style="{StaticResource CustomTextBox}" x:Name="SearchText" Width="100"
+                     VerticalAlignment="Stretch" HorizontalAlignment="Right" Background="#383838" Foreground="White" FontSize="16" Padding="10,2,10,2"
                          PreviewKeyDown="SearchText_PreviewKeyDown" GotKeyboardFocus="SearchText_GotKeyboardFocus"/>
-                <TextBlock IsHitTestVisible="False" Text="Search" FontSize="14" VerticalAlignment="Center" HorizontalAlignment="Left" Margin="10,0,0,0" Foreground="White">
+                <TextBlock IsHitTestVisible="False" Text="Search" FontSize="16" VerticalAlignment="Center" HorizontalAlignment="Left" Margin="10,0,0,0" Foreground="White">
                     <TextBlock.Style>
                         <Style TargetType="{x:Type TextBlock}">
                             <Setter Property="Visibility" Value="Collapsed"/>
@@ -78,7 +78,7 @@
                 </TextBlock>
             </Grid>
             <Button x:Name="SearchBtn" Style="{StaticResource ToolBarButtonStyle}" Background="#383838" Foreground="White" 
-                    Width="18" Height="18" Command="{Binding SearchCommand}" CommandParameter="{Binding ElementName=SearchText,Path=Text}">
+                    Width="20" Height="20" Command="{Binding SearchCommand}" CommandParameter="{Binding ElementName=SearchText,Path=Text}">
                 <TextBlock Text="🔎︎" FontSize="12" VerticalAlignment="Center"/>
             </Button>
         </StackPanel>
@@ -89,9 +89,9 @@
             <userControls:FilterMenu x:Name="FilterMenu" HorizontalContentAlignment="Center"
                                     Items="{Binding LibraryManager.AllTags}" Filters="{Binding LibraryManager.Filters, Mode=TwoWay}" MenuHeaderText="Filter">
             </userControls:FilterMenu>
-            <Button Style="{StaticResource ToolBarButtonStyle}" Background="#383838" Foreground="White" Width="18" Height="18" 
+            <Button Style="{StaticResource ToolBarButtonStyle}" Background="#383838" Foreground="White" Width="20" Height="20"
                     x:Name="FilterTypeChangeButton" Command="{Binding ChangeFilterTypeCommand}">
-                <TextBlock x:Name="FilterType" VerticalAlignment="Center">
+                <TextBlock x:Name="FilterType" VerticalAlignment="Center" FontSize="14">
                     <TextBlock.Style>
                         <Style TargetType="{x:Type TextBlock}">
                             <Setter Property="Text" Value="&amp;"/>
@@ -110,11 +110,7 @@
         </StackPanel>
 
         <!--User Menu-->
-        <Menu x:Name="Menu" HorizontalAlignment="Center" HorizontalContentAlignment="Center" VerticalAlignment="Center" Grid.Column="4" Margin="15,0,15,0">
-            <MenuItem Margin="5,0,5,0" x:Name="MenuUser" VerticalAlignment="Center"
-                      VerticalContentAlignment="Center" Height="22" Foreground="White" Header="User">
-                <MenuItem Header="Login" x:Name="LoginBtn" Margin="5,0,5,0" Command="{Binding LoginCommand}"/>
-            </MenuItem>
-        </Menu>
+        <Button HorizontalAlignment="Center" HorizontalContentAlignment="Center" VerticalAlignment="Stretch" Grid.Column="4" Margin="15,0,15,0"
+                Style="{StaticResource ToolBarButtonStyle}" Command="{Binding LoginCommand}" x:Name="LoginBtn" Content="Login" FontSize="16" Padding="10,2,10,2"/>
     </Grid>
 </Page>
