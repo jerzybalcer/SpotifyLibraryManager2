@@ -95,7 +95,16 @@ namespace SpotifyLibraryManager.ViewModels
 
         public Tag? GetSuggestionTag()
         {
-            return LibraryManager.AllTags.Where(tag => tag.Name.ToLower().StartsWith(NewTagText.ToLower())).FirstOrDefault();
+            var equalTag = LibraryManager.AllTags.FirstOrDefault(tag => tag.Name.ToLower() == NewTagText.ToLower());
+
+            if (equalTag is not null)
+            {
+                return equalTag;
+            }
+            else
+            {
+                return LibraryManager.AllTags.Where(tag => tag.Name.ToLower().StartsWith(NewTagText.ToLower())).FirstOrDefault();
+            }
         }
 
         private void OnTagUpdate(Album targetAlbum)
