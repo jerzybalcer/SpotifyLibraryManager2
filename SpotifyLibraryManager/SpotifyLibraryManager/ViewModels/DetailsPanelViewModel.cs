@@ -3,9 +3,7 @@ using SpotifyLibraryManager.Database;
 using SpotifyLibraryManager.Helpers;
 using SpotifyLibraryManager.Models;
 using System.Collections.ObjectModel;
-using System.Diagnostics;
 using System.Linq;
-using System.Windows;
 
 namespace SpotifyLibraryManager.ViewModels
 {
@@ -16,8 +14,6 @@ namespace SpotifyLibraryManager.ViewModels
         public string NewTagText { get; set; }
         public Command AddTagCommand { get; set; }
         public Command RemoveTagCommand { get; set; }
-        public Command OpenWithSpotifyCommand { get; private set; }
-        public Command CopyLinkCommand { get; private set; }
 
         public string ArtistsString
         {
@@ -44,8 +40,6 @@ namespace SpotifyLibraryManager.ViewModels
             LibraryManager = libraryManager;
             AddTagCommand = new Command(AddTag);
             RemoveTagCommand = new Command(RemoveTag);
-            OpenWithSpotifyCommand = new Command(OpenWithSpotify);
-            CopyLinkCommand = new Command(CopyLink);
 
             LibraryManager.AlbumSelected += (s, e) => OnPropertyChanged(nameof(ArtistsString));
         }
@@ -109,26 +103,6 @@ namespace SpotifyLibraryManager.ViewModels
             LibraryManager.SelectedAlbum = targetAlbum;
             LibraryManager.VisibleAlbums[LibraryManager.VisibleAlbums.ToList().FindIndex(a => a.AlbumId == targetAlbum.AlbumId)] = targetAlbum;
             LibraryManager.AllAlbums[LibraryManager.AllAlbums.ToList().FindIndex(a => a.AlbumId == targetAlbum.AlbumId)] = targetAlbum;
-        }
-
-        private void OpenWithSpotify(object obj)
-        {
-            try
-            {
-                Process.Start("spotify", "--uri=" + LibraryManager.SelectedAlbum.SpotifyUri);
-            }
-            catch
-            {
-                var browser = new Process();
-                browser.StartInfo.UseShellExecute = true;
-                browser.StartInfo.FileName = "https://www.spotify.com/us/download/other/";
-                browser.Start();
-            }
-        }
-
-        private void CopyLink(object obj)
-        {
-            Clipboard.SetText(LibraryManager.SelectedAlbum.ExternalUrl);
         }
     }
 }

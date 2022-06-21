@@ -30,7 +30,7 @@
             <Image Source="{Binding LibraryManager.SelectedAlbum.CoverUrl}" Stretch="Uniform"/>
         </Border>
 
-        <StackPanel x:Name="ExternalLinks" Grid.Column="1" Grid.Row="0" HorizontalAlignment="Center" VerticalAlignment="Top" Orientation="Vertical">
+        <!--<StackPanel x:Name="ExternalLinks" Grid.Column="1" Grid.Row="0" HorizontalAlignment="Center" VerticalAlignment="Top" Orientation="Vertical">
             <Border x:Name="OpenWithSpotifyButton"  CornerRadius="20" HorizontalAlignment="Center" VerticalAlignment="Top"
                 Padding="15" Margin="5">
                 <Border.Style>
@@ -67,7 +67,7 @@
                     <MouseBinding MouseAction="LeftClick" Command="{Binding CopyLinkCommand}"/>
                 </Border.InputBindings>
             </Border>
-        </StackPanel>
+        </StackPanel>-->
 
         <StackPanel Grid.Row="1" x:Name="AlbumsInfoContainer" HorizontalAlignment="Center" Grid.ColumnSpan="2">
             <TextBlock x:Name="Title" Text="{Binding LibraryManager.SelectedAlbum.Title}" Foreground="White" FontSize="28" TextWrapping="Wrap" TextAlignment="Center"
