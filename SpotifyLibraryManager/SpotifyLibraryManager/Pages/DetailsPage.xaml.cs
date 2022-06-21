@@ -72,7 +72,7 @@ namespace SpotifyLibraryManager.Pages
 
         private void NewTag_LostKeyboardFocus(object sender, KeyboardFocusChangedEventArgs e)
         {
-            NewTagNamePopup.IsOpen = false;
+            //NewTagNamePopup.IsOpen = false;
             NewTag.Text = "";
         }
 

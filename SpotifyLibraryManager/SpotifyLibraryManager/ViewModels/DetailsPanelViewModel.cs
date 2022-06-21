@@ -46,8 +46,8 @@ namespace SpotifyLibraryManager.ViewModels
 
         private async void AddTag(object param)
         {
-            IsSuggestionPopupOpen = false;
             string tagName = (string)param;
+            IsSuggestionPopupOpen = false;
 
             using (var db = new LibraryContext())
             {
