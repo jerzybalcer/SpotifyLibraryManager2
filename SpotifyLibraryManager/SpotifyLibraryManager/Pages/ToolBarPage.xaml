@@ -28,15 +28,6 @@
 
         <!--Sort Menu-->
         <StackPanel Orientation="Horizontal" Grid.Column="1" VerticalAlignment="Stretch" HorizontalAlignment="Center" x:Name="SortStackPanel" Margin="15,0,15,0">
-            <!--<Menu x:Name="SortMenu" HorizontalAlignment="Center" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" 
-                  VerticalAlignment="Center">
-                <MenuItem Header="Sort By" Foreground="White" Margin="5,0,5,0" VerticalContentAlignment="Center" VerticalAlignment="Center" Height="22" x:Name="SortTopItem">
-                    <MenuItem Header="Title" x:Name="SortByTitle" Margin="5,0,5,0" IsCheckable="True" Command="{Binding SortCommand}" CommandParameter="{Binding Header, ElementName=SortByTitle}"/>
-                    <MenuItem Header="Artist" x:Name="SortByArtist" Margin="5,0,5,0" IsCheckable="True" Command="{Binding SortCommand}" CommandParameter="{Binding Header, ElementName=SortByArtist}"/>
-                    <MenuItem Header="ReleaseDate" x:Name="SortByReleaseDate" Margin="5,0,5,0" IsCheckable="True" Command="{Binding SortCommand}" CommandParameter="{Binding Header, ElementName=SortByReleaseDate}"/>
-                    <MenuItem Header="LikeDate" x:Name="SortByLikeDate" Margin="5,0,5,0" IsCheckable="True" Command="{Binding SortCommand}" CommandParameter="{Binding Header, ElementName=SortByLikeDate}"/>
-                </MenuItem>
-            </Menu>-->
             <userControls:SortMenu CheckedOption="{Binding SortBy, Mode=TwoWay}"/>
             <Button Style="{StaticResource ToolBarButtonStyle}" Background="#383838" Foreground="White" Width="20" Height="20" 
                     x:Name="SortDirectionChanger" Command="{Binding ToggleSortingDirectionCommand}">
