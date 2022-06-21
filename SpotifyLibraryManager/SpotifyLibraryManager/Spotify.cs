@@ -16,7 +16,7 @@ namespace SpotifyLibraryManager
     {
         private const string CallbackUri = "http://localhost:5000/callback";
         private const string ClientId = "bfeb37c849e1488eacc3a4a8cbb8e224";
-        private const string TokensPath = "tokens.json";
+        private static readonly string TokensPath = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments) + @"\SpotifyLibraryManager\tokens.json";
 
         public static SpotifyClient? Client { get; private set; }
 
