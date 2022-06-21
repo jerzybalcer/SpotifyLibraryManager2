@@ -84,9 +84,16 @@ namespace SpotifyLibraryManager.ViewModels
                     .Include(album => album.Artists)
                     .First(album => album.AlbumId == LibraryManager.SelectedAlbum.AlbumId);
 
-                var tagToRemove = thisAlbum.Tags.FindIndex(tag => tag.Name.ToLower() == tagName.ToLower());
+                var tagToRemove = thisAlbum.Tags.First(tag => tag.Name.ToLower() == tagName.ToLower());
 
-                thisAlbum.Tags.RemoveAt(tagToRemove);
+                thisAlbum.Tags.Remove(tagToRemove);
+
+                if(db.Tags.AsNoTracking().Include(t => t.Albums).Single(tag => tag.TagId == tagToRemove.TagId).Albums.Count == 1)
+                {
+                    db.Tags.Remove(tagToRemove);
+                    LibraryManager.AllTags.Remove(LibraryManager.AllTags.Single(t => t.TagId == tagToRemove.TagId));
+                    LibraryManager.Filters.Remove(LibraryManager.Filters.FirstOrDefault(f => f.TagId == tagToRemove.TagId));
+                }
 
                 await db.SaveChangesAsync();
                 OnTagUpdate(thisAlbum);
