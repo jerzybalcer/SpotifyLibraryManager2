@@ -6,7 +6,7 @@
       xmlns:local="clr-namespace:SpotifyLibraryManager.Pages" xmlns:userControls="clr-namespace:SpotifyLibraryManager.UserControls"
       mc:Ignorable="d" 
       d:DesignHeight="450" d:DesignWidth="800"
-      Title="DetailsPage" MouseLeftButtonDown="Page_MouseLeftButtonDown">
+      Title="DetailsPage" MouseLeftButtonDown="Page_MouseLeftButtonDown" Loaded="Page_Loaded">
 
     <Grid Background="#121212">
         <Grid.RowDefinitions>
@@ -29,45 +29,6 @@
                 HorizontalAlignment="Center" Margin="5" Background="#282828">
             <Image Source="{Binding LibraryManager.SelectedAlbum.CoverUrl}" Stretch="Uniform"/>
         </Border>
-
-        <!--<StackPanel x:Name="ExternalLinks" Grid.Column="1" Grid.Row="0" HorizontalAlignment="Center" VerticalAlignment="Top" Orientation="Vertical">
-            <Border x:Name="OpenWithSpotifyButton"  CornerRadius="20" HorizontalAlignment="Center" VerticalAlignment="Top"
-                Padding="15" Margin="5">
-                <Border.Style>
-                    <Style TargetType="{x:Type Border}">
-                        <Style.Triggers>
-                            <Trigger Property="IsMouseOver" Value="True">
-                                <Setter Property="Background" Value="#575757"/>
-                            </Trigger>
-                            <Trigger Property="IsMouseOver" Value="False">
-                                <Setter Property="Background" Value="#282828"/>
-                            </Trigger>
-                        </Style.Triggers>
-                    </Style>
-                </Border.Style>
-                <Border.InputBindings>
-                    <MouseBinding MouseAction="LeftClick" Command="{Binding OpenWithSpotifyCommand}"/>
-                </Border.InputBindings>
-            </Border>
-            <Border x:Name="CopyLinkButton" CornerRadius="20" HorizontalAlignment="Center" VerticalAlignment="Top"
-                Padding="15" Margin="5">
-                <Border.Style>
-                    <Style TargetType="{x:Type Border}">
-                        <Style.Triggers>
-                            <Trigger Property="IsMouseOver" Value="True">
-                                <Setter Property="Background" Value="#575757"/>
-                            </Trigger>
-                            <Trigger Property="IsMouseOver" Value="False">
-                                <Setter Property="Background" Value="#282828"/>
-                            </Trigger>
-                        </Style.Triggers>
-                    </Style>
-                </Border.Style>
-                <Border.InputBindings>
-                    <MouseBinding MouseAction="LeftClick" Command="{Binding CopyLinkCommand}"/>
-                </Border.InputBindings>
-            </Border>
-        </StackPanel>-->
 
         <StackPanel Grid.Row="1" x:Name="AlbumsInfoContainer" HorizontalAlignment="Center" Grid.ColumnSpan="2">
             <TextBlock x:Name="Title" Text="{Binding LibraryManager.SelectedAlbum.Title}" Foreground="White" FontSize="28" TextWrapping="Wrap" TextAlignment="Center"
@@ -129,13 +90,13 @@
                 BorderThickness="1"
                 Background="#404040" CornerRadius="5" BorderBrush="Transparent">
                     <StackPanel Orientation="Vertical">
-                        <Border CornerRadius="10" x:Name="SuggestionTextBorder" Margin="0,2,0,2" Cursor="Hand">
+                        <Border CornerRadius="10" x:Name="SuggestionTextBorder" Margin="0,2,0,2" Cursor="Hand" Visibility="Collapsed">
                             <Border.InputBindings>
                                 <MouseBinding MouseAction="LeftClick" Command="{Binding AddTagCommand}" CommandParameter="{Binding Text, ElementName=SuggestionText}"/>
                             </Border.InputBindings>
                             <TextBlock x:Name="SuggestionText" FontSize="14" Padding="5,2,5,2" FontWeight="DemiBold"/>
                         </Border>
-                        <Border CornerRadius="10" x:Name="NewSuggestionTextBorder" Margin="0,2,0,2" Cursor="Hand"
+                        <Border CornerRadius="10" x:Name="NewSuggestionTextBorder" Margin="0,2,0,2" Cursor="Hand" Visibility="Collapsed"
                                 Background="#575757">
                             <Border.InputBindings>
                                 <MouseBinding MouseAction="LeftClick" Command="{Binding AddTagCommand}" CommandParameter="{Binding Text, ElementName=NewSuggestionText}"/>

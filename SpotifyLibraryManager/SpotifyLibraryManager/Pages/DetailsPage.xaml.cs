@@ -72,7 +72,6 @@ namespace SpotifyLibraryManager.Pages
 
         private void NewTag_LostKeyboardFocus(object sender, KeyboardFocusChangedEventArgs e)
         {
-            //NewTagNamePopup.IsOpen = false;
             NewTag.Text = "";
         }
 
@@ -88,7 +87,7 @@ namespace SpotifyLibraryManager.Pages
         {
             if (e.Key == Key.Enter)
             {
-                if(NewSuggestionTextBorder.Visibility == Visibility.Visible)
+                if(NewSuggestionTextBorder.Visibility == Visibility.Visible && SuggestionPopup.IsOpen)
                 {
                     NewSuggestionTextBorder.InputBindings[0].Command.Execute(NewSuggestionText.Text);
                     Keyboard.ClearFocus();
@@ -100,7 +99,7 @@ namespace SpotifyLibraryManager.Pages
             }
             else if (e.Key == Key.Tab)
             {
-                if(SuggestionTextBorder.Visibility == Visibility.Visible)
+                if(SuggestionTextBorder.Visibility == Visibility.Visible && SuggestionPopup.IsOpen)
                 {
                     SuggestionTextBorder.InputBindings[0].Command.Execute(SuggestionText.Text);
                     Keyboard.ClearFocus();
@@ -132,6 +131,33 @@ namespace SpotifyLibraryManager.Pages
             {
                 NoAlbumSelected.Visibility = Visibility.Collapsed;
             }
+        }
+
+        private void Page_Loaded(object sender, RoutedEventArgs e)
+        {
+            var window = Window.GetWindow(this);
+            //window.KeyDown += OnGlobalKeyDown;
+        }
+
+        private void OnGlobalKeyDown(object sender, KeyEventArgs e)
+        {
+            //if (e.Key == Key.Tab)
+            //{
+            //    if (!SuggestionPopup.IsOpen)
+            //    {
+            //        if (!NewTagNamePopup.IsOpen)
+            //        {
+            //            NewTagNamePopup.IsOpen = true;
+            //        }
+
+            //        e.Handled = true;
+            //        NewTag.Focus();
+            //    }
+            //    else
+            //    {
+            //        NewTag_PreviewKeyDown(sender, e);
+            //    }
+            //}
         }
     }
 }
