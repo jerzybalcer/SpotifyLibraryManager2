@@ -90,6 +90,9 @@
                             <Trigger Property="IsMouseOver" Value="False">
                                 <Setter Property="Background" Value="#282828"/>
                             </Trigger>
+                            <DataTrigger Binding="{Binding ElementName=NewTagNamePopup, Path=IsOpen}" Value="True">
+                                <Setter Property="Background" Value="#575757"/>
+                            </DataTrigger>
                         </Style.Triggers>
                     </Style>
                 </Border.Style>
