@@ -3,7 +3,10 @@
       xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
       xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
       xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
-      xmlns:local="clr-namespace:SpotifyLibraryManager.Pages" xmlns:converters="clr-namespace:SpotifyLibraryManager.Helpers.Converters" xmlns:userControls="clr-namespace:SpotifyLibraryManager.UserControls"
+      xmlns:local="clr-namespace:SpotifyLibraryManager.Pages" 
+      xmlns:converters="clr-namespace:SpotifyLibraryManager.Helpers.Converters" 
+      xmlns:userControls="clr-namespace:SpotifyLibraryManager.UserControls"
+      xmlns:models="clr-namespace:SpotifyLibraryManager.Models"
       mc:Ignorable="d"
       d:DesignHeight="450" d:DesignWidth="800"
       Title="ToolBarPage">
@@ -87,11 +90,17 @@
                         <Style TargetType="{x:Type TextBlock}">
                             <Setter Property="Text" Value="&amp;"/>
                             <Style.Triggers>
-                                <DataTrigger Binding="{Binding AreAllFiltersRequired}" Value="False">
+                                <DataTrigger Binding="{Binding FilterType}" Value="{x:Static models:FilterType.AtLeastOneMatching}">
                                     <Setter Property="Text" Value="|"/>
+                                    <Setter Property="ToolTip" Value="At Least One Matching"/>
                                 </DataTrigger>
-                                <DataTrigger Binding="{Binding AreAllFiltersRequired}" Value="True">
+                                <DataTrigger Binding="{Binding FilterType}" Value="{x:Static models:FilterType.AllMatching}">
                                     <Setter Property="Text" Value="&amp;"/>
+                                    <Setter Property="ToolTip" Value="All Matching"/>
+                                </DataTrigger>
+                                <DataTrigger Binding="{Binding FilterType}" Value="{x:Static models:FilterType.WithNoTags}">
+                                    <Setter Property="Text" Value="0"/>
+                                    <Setter Property="ToolTip" Value="With No Tags"/>
                                 </DataTrigger>
                             </Style.Triggers>
                         </Style>

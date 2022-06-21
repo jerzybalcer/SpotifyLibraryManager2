@@ -13,7 +13,7 @@ namespace SpotifyLibraryManager.ViewModels
         public LibraryManager LibraryManager { get; private set; }
         public bool IsSortingAscending { get; set; }
         public string SearchPhrase { get; set; }
-        public bool AreAllFiltersRequired { get; set; } = true;
+        public FilterType FilterType { get; set; } = FilterType.AllMatching;
         public string SortBy
         {
             get { return _sortBy; }
@@ -66,16 +66,23 @@ namespace SpotifyLibraryManager.ViewModels
 
             foreach (var album in LibraryManager.AllAlbums)
             {
-                if (AreAllFiltersRequired)
+                if (FilterType == FilterType.AllMatching)
                 {
                     if (LibraryManager.Filters.All(filter => album.Tags.Any(tag => tag.Name == filter.Name)))
                     {
                         matching.Add(album);
                     }
                 }
-                else
+                else if (FilterType == FilterType.AtLeastOneMatching)
                 {
                     if (LibraryManager.Filters.Any(filter => album.Tags.Any(tag => tag.Name == filter.Name)))
+                    {
+                        matching.Add(album);
+                    }
+                }
+                else if (FilterType == FilterType.WithNoTags)
+                {
+                    if (album.Tags.Count == 0)
                     {
                         matching.Add(album);
                     }
@@ -84,10 +91,10 @@ namespace SpotifyLibraryManager.ViewModels
 
             LibraryManager.VisibleAlbums = new ObservableCollection<Album>(matching);
         }
-        
+
         public void SortAlbums(object param)
         {
-            if(SortBy == "Artist")
+            if (SortBy == "Artist")
             {
                 if (IsSortingAscending)
                 {
@@ -119,7 +126,7 @@ namespace SpotifyLibraryManager.ViewModels
 
         public void ChangeFilterType(object param)
         {
-            AreAllFiltersRequired = !AreAllFiltersRequired;
+            FilterType = FilterType == FilterType.WithNoTags ? FilterType.AllMatching : FilterType + 1;
             FilterAlbums(null);
         }
 
