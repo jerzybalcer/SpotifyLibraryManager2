@@ -56,7 +56,7 @@ namespace SpotifyLibraryManager.Pages
             SuggestionPopup.IsOpen = true;
         }
 
-        private void NewTagButton_MouseLeftButtonDown(object sender, System.Windows.Input.MouseButtonEventArgs e)
+        private void NewTagButton_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
         {
             NewTagNamePopup.IsOpen = !NewTagNamePopup.IsOpen;
 
@@ -66,7 +66,8 @@ namespace SpotifyLibraryManager.Pages
             }
             else
             {
-                Keyboard.ClearFocus();
+                //Keyboard.ClearFocus();
+                Keyboard.Focus(Window.GetWindow(this));
             }
         }
 
@@ -79,7 +80,8 @@ namespace SpotifyLibraryManager.Pages
         {
             if (!NewTagButton.IsMouseOver)
             {
-                Keyboard.ClearFocus();
+                //Keyboard.ClearFocus();
+                Keyboard.Focus(Window.GetWindow(this));
             }
         }
 
@@ -90,19 +92,20 @@ namespace SpotifyLibraryManager.Pages
                 if(NewSuggestionTextBorder.Visibility == Visibility.Visible && SuggestionPopup.IsOpen)
                 {
                     NewSuggestionTextBorder.InputBindings[0].Command.Execute(NewSuggestionText.Text);
-                    Keyboard.ClearFocus();
+                    NewTag.Text = "";
                 }
             }
             else if (e.Key == Key.Escape)
             {
-                Keyboard.ClearFocus();
+                //Keyboard.ClearFocus();
+                Keyboard.Focus(Window.GetWindow(this));
             }
             else if (e.Key == Key.Tab)
             {
                 if(SuggestionTextBorder.Visibility == Visibility.Visible && SuggestionPopup.IsOpen)
                 {
                     SuggestionTextBorder.InputBindings[0].Command.Execute(SuggestionText.Text);
-                    Keyboard.ClearFocus();
+                    NewTag.Text = "";
                 }
             }
         }
@@ -136,28 +139,29 @@ namespace SpotifyLibraryManager.Pages
         private void Page_Loaded(object sender, RoutedEventArgs e)
         {
             var window = Window.GetWindow(this);
-            //window.KeyDown += OnGlobalKeyDown;
+            window.KeyDown += OnGlobalKeyDown;
         }
 
         private void OnGlobalKeyDown(object sender, KeyEventArgs e)
         {
-            //if (e.Key == Key.Tab)
-            //{
-            //    if (!SuggestionPopup.IsOpen)
-            //    {
-            //        if (!NewTagNamePopup.IsOpen)
-            //        {
-            //            NewTagNamePopup.IsOpen = true;
-            //        }
+            if (e.Key == Key.Tab)
+            {
+                if (!SuggestionPopup.IsOpen)
+                {
+                    if (!NewTagNamePopup.IsOpen && NoAlbumSelected.Visibility != Visibility.Visible)
+                    {
+                        NewTagNamePopup.IsOpen = true;
 
-            //        e.Handled = true;
-            //        NewTag.Focus();
-            //    }
-            //    else
-            //    {
-            //        NewTag_PreviewKeyDown(sender, e);
-            //    }
-            //}
+                        e.Handled = true;
+                    }
+
+                    NewTag.Focus();
+                }
+                else
+                {
+                    NewTag_PreviewKeyDown(sender, e);
+                }
+            }
         }
     }
 }

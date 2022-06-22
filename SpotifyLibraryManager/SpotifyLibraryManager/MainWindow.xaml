@@ -6,7 +6,7 @@
         xmlns:local="clr-namespace:SpotifyLibraryManager" xmlns:userControls="clr-namespace:SpotifyLibraryManager.UserControls"
         mc:Ignorable="d"
         Title="MainWindow" Height="720" Width="1280" WindowStyle="None" ResizeMode="NoResize" Loaded="Window_Loaded">
-    <Grid Background="#000000">
+    <Grid Background="#000000" KeyboardNavigation.TabNavigation="None">
 
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="auto" MinWidth="924" x:Name="AlbumsListColumn"/>

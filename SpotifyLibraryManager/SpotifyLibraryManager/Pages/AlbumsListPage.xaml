@@ -6,7 +6,7 @@
       xmlns:local="clr-namespace:SpotifyLibraryManager.Pages" xmlns:userControls="clr-namespace:SpotifyLibraryManager.UserControls"
       mc:Ignorable="d" 
       d:DesignHeight="450" d:DesignWidth="800"
-      Title="AlbumsListPage">
+      Title="AlbumsListPage" KeyboardNavigation.TabNavigation="None">
 
     <Grid>
         <ScrollViewer x:Name="AlbumsScrollViewer">
