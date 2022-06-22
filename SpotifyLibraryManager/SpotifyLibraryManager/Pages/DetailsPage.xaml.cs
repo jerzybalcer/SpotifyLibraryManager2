@@ -66,7 +66,6 @@ namespace SpotifyLibraryManager.Pages
             }
             else
             {
-                //Keyboard.ClearFocus();
                 Keyboard.Focus(Window.GetWindow(this));
             }
         }
@@ -80,7 +79,6 @@ namespace SpotifyLibraryManager.Pages
         {
             if (!NewTagButton.IsMouseOver)
             {
-                //Keyboard.ClearFocus();
                 Keyboard.Focus(Window.GetWindow(this));
             }
         }
@@ -94,10 +92,14 @@ namespace SpotifyLibraryManager.Pages
                     NewSuggestionTextBorder.InputBindings[0].Command.Execute(NewSuggestionText.Text);
                     NewTag.Text = "";
                 }
+                else if(SuggestionTextBorder.Visibility == Visibility.Visible && SuggestionPopup.IsOpen)
+                {
+                    SuggestionTextBorder.InputBindings[0].Command.Execute(SuggestionText.Text);
+                    NewTag.Text = "";
+                }
             }
             else if (e.Key == Key.Escape)
             {
-                //Keyboard.ClearFocus();
                 Keyboard.Focus(Window.GetWindow(this));
             }
             else if (e.Key == Key.Tab)
