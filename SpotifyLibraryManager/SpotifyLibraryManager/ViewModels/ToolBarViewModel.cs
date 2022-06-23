@@ -62,7 +62,9 @@ namespace SpotifyLibraryManager.ViewModels
                 _searchedAlbums = new ObservableCollection<Album>(matching);
             }
 
-            LibraryManager.VisibleAlbums = new ObservableCollection<Album>(_filteredAlbums.Intersect(_searchedAlbums));
+            LibraryManager.VisibleAlbums = new ObservableCollection<Album>(_filteredAlbums.Join(
+                _searchedAlbums, searched => searched.AlbumId, filtered => filtered.AlbumId, (searched, filtered) => searched = filtered)
+                );
         }
 
         public void FilterAlbums(object param)
@@ -103,7 +105,9 @@ namespace SpotifyLibraryManager.ViewModels
                 _filteredAlbums = new ObservableCollection<Album>(matching);
             }
 
-            LibraryManager.VisibleAlbums = new ObservableCollection<Album>(_filteredAlbums.Intersect(_searchedAlbums));
+            LibraryManager.VisibleAlbums = new ObservableCollection<Album>(_filteredAlbums.Join(
+                _searchedAlbums, searched => searched.AlbumId, filtered => filtered.AlbumId, (searched, filtered) => searched = filtered)
+                );
         }
 
         public void SortAlbums(object param)
@@ -160,10 +164,16 @@ namespace SpotifyLibraryManager.ViewModels
             LibraryManager.LoadAllTags();
         }
 
+        private void OnAllAlbumsChanged()
+        {
+            FilterAlbums(null);
+        }
+
         public ToolBarViewModel(LibraryManager libraryManager)
         {
             LibraryManager = libraryManager;
             LibraryManager.Filters.CollectionChanged += (s, e) => FilterAlbums(null);
+            LibraryManager.AllAlbums.CollectionChanged += (s, e) => OnAllAlbumsChanged();
             _filteredAlbums = LibraryManager.AllAlbums;
             _searchedAlbums = LibraryManager.AllAlbums;
 
