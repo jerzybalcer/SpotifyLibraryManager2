@@ -117,7 +117,14 @@ namespace SpotifyLibraryManager.ViewModels
         private void OnTagUpdate(Album targetAlbum)
         {
             LibraryManager.SelectedAlbum = targetAlbum;
-            LibraryManager.VisibleAlbums[LibraryManager.VisibleAlbums.ToList().FindIndex(a => a.AlbumId == targetAlbum.AlbumId)] = targetAlbum;
+
+            var indexInVisible = LibraryManager.VisibleAlbums.ToList().FindIndex(a => a.AlbumId == targetAlbum.AlbumId);
+
+            if(indexInVisible >= 0)
+            {
+                LibraryManager.VisibleAlbums[indexInVisible] = targetAlbum;
+            }
+
             LibraryManager.AllAlbums[LibraryManager.AllAlbums.ToList().FindIndex(a => a.AlbumId == targetAlbum.AlbumId)] = targetAlbum;
         }
     }
