@@ -59,6 +59,7 @@ namespace SpotifyLibraryManager.ViewModels
                 if (LibraryManager.AllTags.ToList().Exists(tag => tag.Name.ToLower() == tagName.ToLower()) == false)
                 {
                     thisAlbum.Tags.Add(new Tag { Name = tagName, ColorHex = RandomHexGenerator.GenerateRandomHex() });
+                    LibraryManager.AllTags.Add(thisAlbum.Tags.Last());
                 }
                 else
                 {
@@ -69,7 +70,6 @@ namespace SpotifyLibraryManager.ViewModels
                 }
                 await db.SaveChangesAsync();
                 OnTagUpdate(thisAlbum);
-                LibraryManager.AllTags = new ObservableCollection<Tag>(await db.Tags.AsNoTracking().ToListAsync());
             }
         }
 
