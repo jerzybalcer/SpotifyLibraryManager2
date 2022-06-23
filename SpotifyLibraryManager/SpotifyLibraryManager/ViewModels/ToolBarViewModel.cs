@@ -164,11 +164,19 @@ namespace SpotifyLibraryManager.ViewModels
             LibraryManager.LoadAllTags();
         }
 
+        private void OnAllAlbumsChanged()
+        {
+            if (_filteredAlbums.Count < LibraryManager.AllAlbums.Count || _searchedAlbums.Count < LibraryManager.AllAlbums.Count)
+            {
+                FilterAlbums(null);
+            }
+        }
+
         public ToolBarViewModel(LibraryManager libraryManager)
         {
             LibraryManager = libraryManager;
             LibraryManager.Filters.CollectionChanged += (s, e) => FilterAlbums(null);
-            LibraryManager.AllAlbums.CollectionChanged += (s, e) => FilterAlbums(null);
+            LibraryManager.AllAlbums.CollectionChanged += (s, e) => OnAllAlbumsChanged();
             _filteredAlbums = LibraryManager.AllAlbums;
             _searchedAlbums = LibraryManager.AllAlbums;
 
