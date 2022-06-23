@@ -69,7 +69,7 @@ namespace SpotifyLibraryManager.ViewModels
 
         public void FilterAlbums(object param)
         {
-            if (LibraryManager.Filters.Count == 0)
+            if (LibraryManager.Filters.Count == 0 && FilterType != FilterType.WithNoTags)
             {
                 _filteredAlbums = LibraryManager.AllAlbums;
             }
