@@ -9,6 +9,8 @@ namespace SpotifyLibraryManager.ViewModels
     public class ToolBarViewModel : ViewModelBase
     {
         private string _sortBy = "LikeDate";
+        private ObservableCollection<Album> _searchedAlbums;
+        private ObservableCollection<Album> _filteredAlbums;
 
         public LibraryManager LibraryManager { get; private set; }
         public bool IsSortingAscending { get; set; }
@@ -19,11 +21,11 @@ namespace SpotifyLibraryManager.ViewModels
             get { return _sortBy; }
             set { _sortBy = value; SortAlbums(null); }
         }
-        public Command SearchCommand { get; set; }
-        public Command ToggleSortingDirectionCommand { get; set; }
-        public Command SyncCommand { get; set; }
-        public Command LoginCommand { get; set; }
-        public Command ChangeFilterTypeCommand { get; set; }
+        public Command SearchCommand { get; private set; }
+        public Command ToggleSortingDirectionCommand { get; private set; }
+        public Command SyncCommand { get; private set; }
+        public Command LoginCommand { get; private set; }
+        public Command ChangeFilterTypeCommand { get; private set; }
 
         public void SearchAlbums(object param)
         {
@@ -31,65 +33,77 @@ namespace SpotifyLibraryManager.ViewModels
 
             if (string.IsNullOrEmpty(searchPhrase))
             {
-                LibraryManager.VisibleAlbums = new ObservableCollection<Album>(LibraryManager.AllAlbums);
-                return;
+                _searchedAlbums = LibraryManager.AllAlbums;
             }
-
-            List<Album> matching = new List<Album>();
-
-            foreach (var album in LibraryManager.AllAlbums)
+            else
             {
-                foreach (var artist in album.Artists)
+                List<Album> matching = new List<Album>();
+
+                foreach (var album in LibraryManager.AllAlbums)
                 {
-                    if (artist.Name.ToLower().Contains(searchPhrase.ToLower()))
+                    foreach (var artist in album.Artists)
                     {
-                        matching.Add(album);
-                        continue;
+                        if (artist.Name.ToLower().Contains(searchPhrase.ToLower()))
+                        {
+                            matching.Add(album);
+                            continue;
+                        }
+                    }
+
+                    if (album.Title.ToLower().Contains(searchPhrase.ToLower()))
+                    {
+                        if (!matching.Contains(album))
+                        {
+                            matching.Add(album);
+                        }
                     }
                 }
 
-                if (album.Title.ToLower().Contains(searchPhrase.ToLower()))
-                {
-                    if (!matching.Contains(album))
-                    {
-                        matching.Add(album);
-                    }
-                }
+                _searchedAlbums = new ObservableCollection<Album>(matching);
             }
 
-            LibraryManager.VisibleAlbums = new ObservableCollection<Album>(matching);
+            LibraryManager.VisibleAlbums = new ObservableCollection<Album>(_filteredAlbums.Intersect(_searchedAlbums));
         }
 
         public void FilterAlbums(object param)
         {
-            var matching = new List<Album>();
-
-            foreach (var album in LibraryManager.AllAlbums)
+            if (LibraryManager.Filters.Count == 0)
             {
-                if (FilterType == FilterType.AllMatching)
+                _filteredAlbums = LibraryManager.AllAlbums;
+            }
+            else
+            {
+                var matching = new List<Album>();
+
+                foreach (var album in LibraryManager.AllAlbums)
                 {
-                    if (LibraryManager.Filters.All(filter => album.Tags.Any(tag => tag.Name == filter.Name)))
+                    if (FilterType == FilterType.AllMatching)
                     {
-                        matching.Add(album);
+                        if (LibraryManager.Filters.All(filter => album.Tags.Any(tag => tag.Name == filter.Name)))
+                        {
+                            matching.Add(album);
+                        }
+                    }
+                    else if (FilterType == FilterType.AtLeastOneMatching)
+                    {
+                        if (LibraryManager.Filters.Any(filter => album.Tags.Any(tag => tag.Name == filter.Name)))
+                        {
+                            matching.Add(album);
+                        }
+                    }
+                    else if (FilterType == FilterType.WithNoTags)
+                    {
+                        if (album.Tags.Count == 0)
+                        {
+                            matching.Add(album);
+                        }
                     }
                 }
-                else if (FilterType == FilterType.AtLeastOneMatching)
-                {
-                    if (LibraryManager.Filters.Any(filter => album.Tags.Any(tag => tag.Name == filter.Name)))
-                    {
-                        matching.Add(album);
-                    }
-                }
-                else if (FilterType == FilterType.WithNoTags)
-                {
-                    if (album.Tags.Count == 0)
-                    {
-                        matching.Add(album);
-                    }
-                }
+
+                _filteredAlbums = new ObservableCollection<Album>(matching);
             }
 
-            LibraryManager.VisibleAlbums = new ObservableCollection<Album>(matching);
+            LibraryManager.VisibleAlbums = new ObservableCollection<Album>(_filteredAlbums.Intersect(_searchedAlbums));
         }
 
         public void SortAlbums(object param)
@@ -133,9 +147,10 @@ namespace SpotifyLibraryManager.ViewModels
         public async void SyncAlbums(object param)
         {
             LibraryManager.SelectedAlbum = new Album();
-            var syncedAlbums = await AlbumsProvider.SyncAlbums();
-            LibraryManager.AllAlbums = new ObservableCollection<Album>(syncedAlbums);
-            LibraryManager.VisibleAlbums = new ObservableCollection<Album>(syncedAlbums);
+            LibraryManager.AllAlbums = new ObservableCollection<Album>(await AlbumsProvider.SyncAlbums());
+            LibraryManager.VisibleAlbums = LibraryManager.AllAlbums;
+            _filteredAlbums = LibraryManager.AllAlbums;
+            _searchedAlbums = LibraryManager.AllAlbums;
         }
 
         public async void LoginToSpotify(object param)
@@ -149,6 +164,8 @@ namespace SpotifyLibraryManager.ViewModels
         {
             LibraryManager = libraryManager;
             LibraryManager.Filters.CollectionChanged += (s, e) => FilterAlbums(null);
+            _filteredAlbums = LibraryManager.AllAlbums;
+            _searchedAlbums = LibraryManager.AllAlbums;
 
             SearchCommand = new Command(SearchAlbums);
             ToggleSortingDirectionCommand = new Command(ToggleSortingDirection);
