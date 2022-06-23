@@ -164,16 +164,11 @@ namespace SpotifyLibraryManager.ViewModels
             LibraryManager.LoadAllTags();
         }
 
-        private void OnAllAlbumsChanged()
-        {
-            FilterAlbums(null);
-        }
-
         public ToolBarViewModel(LibraryManager libraryManager)
         {
             LibraryManager = libraryManager;
             LibraryManager.Filters.CollectionChanged += (s, e) => FilterAlbums(null);
-            LibraryManager.AllAlbums.CollectionChanged += (s, e) => OnAllAlbumsChanged();
+            LibraryManager.AllAlbums.CollectionChanged += (s, e) => FilterAlbums(null);
             _filteredAlbums = LibraryManager.AllAlbums;
             _searchedAlbums = LibraryManager.AllAlbums;
 
