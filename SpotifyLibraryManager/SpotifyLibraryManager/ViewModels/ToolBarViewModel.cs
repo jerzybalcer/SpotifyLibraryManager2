@@ -151,11 +151,14 @@ namespace SpotifyLibraryManager.ViewModels
 
         public async void SyncAlbums(object param)
         {
-            LibraryManager.SelectedAlbum = new Album();
-            LibraryManager.AllAlbums = new ObservableCollection<Album>(await AlbumsProvider.SyncAlbums());
-            LibraryManager.VisibleAlbums = LibraryManager.AllAlbums;
-            _filteredAlbums = LibraryManager.AllAlbums;
-            _searchedAlbums = LibraryManager.AllAlbums;
+            if(Spotify.Client is not null)
+            {
+                LibraryManager.SelectedAlbum = new Album();
+                LibraryManager.AllAlbums = new ObservableCollection<Album>(await AlbumsProvider.SyncAlbums());
+                LibraryManager.VisibleAlbums = LibraryManager.AllAlbums;
+                _filteredAlbums = LibraryManager.AllAlbums;
+                _searchedAlbums = LibraryManager.AllAlbums;
+            }
         }
 
         public async void LoginToSpotify(object param)
