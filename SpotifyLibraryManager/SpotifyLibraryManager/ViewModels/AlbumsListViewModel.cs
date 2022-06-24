@@ -1,6 +1,8 @@
 ﻿using SpotifyLibraryManager.Helpers;
 using SpotifyLibraryManager.Models;
+using System;
 using System.Diagnostics;
+using System.Security;
 using System.Windows;
 
 namespace SpotifyLibraryManager.ViewModels
@@ -29,16 +31,26 @@ namespace SpotifyLibraryManager.ViewModels
         {
             Album album = (Album)obj;
 
-            try
+            try // try starting app downloaded from microsoft store
             {
                 Process.Start("spotify", "--uri=" + album.SpotifyUri);
             }
             catch
             {
-                var browser = new Process();
-                browser.StartInfo.UseShellExecute = true;
-                browser.StartInfo.FileName = "https://www.spotify.com/us/download/other/";
-                browser.Start();
+                try // try starting app downloaded from spotify website
+                {
+                    var spotify = new Process();
+                    spotify.StartInfo.FileName = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData) + @"\Spotify\Spotify.exe";
+                    spotify.StartInfo.Arguments = "--uri=" + album.SpotifyUri;
+                    spotify.Start();
+                }
+                catch // no app present on computer
+                {
+                    var browser = new Process();
+                    browser.StartInfo.UseShellExecute = true;
+                    browser.StartInfo.FileName = "https://www.spotify.com/us/download/other/";
+                    browser.Start();
+                }
             }
         }
 
