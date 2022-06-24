@@ -8,7 +8,7 @@ using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace SpotifyLibraryManager
+namespace SpotifyLibraryManager.Services
 {
     public static class AlbumsProvider
     {

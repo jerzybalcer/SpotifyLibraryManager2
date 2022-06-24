@@ -1,6 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using SpotifyLibraryManager.Database;
 using SpotifyLibraryManager.Models;
+using SpotifyLibraryManager.Services;
 using System;
 using System.Collections.ObjectModel;
 
