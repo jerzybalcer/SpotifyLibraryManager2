@@ -167,7 +167,7 @@ namespace SpotifyLibraryManager.ViewModels
 			{
 				LibraryManager.SelectedAlbum = new Album();
 				LibraryManager.AllAlbums = new ObservableCollection<Album>(await AlbumsProvider.SyncAlbums());
-				LibraryManager.VisibleAlbums = LibraryManager.AllAlbums;
+				ModifyVisibleAlbums(null); // Refresh filters after ansychrouous album sync.
 			}
 		}
 
@@ -178,16 +178,11 @@ namespace SpotifyLibraryManager.ViewModels
 			LibraryManager.LoadAllTags();
 		}
 
-		private void OnAllAlbumsChanged()
-		{
-			ModifyVisibleAlbums(null);
-		}
-
 		public ToolBarViewModel(LibraryManager libraryManager)
 		{
 			LibraryManager = libraryManager;
 			LibraryManager.Filters.CollectionChanged += (s, e) => ModifyVisibleAlbums(null);
-			LibraryManager.AllAlbums.CollectionChanged += (s, e) => OnAllAlbumsChanged();
+			LibraryManager.AllAlbums.CollectionChanged += (s, e) => ModifyVisibleAlbums(null);
 
 			SearchCommand = new Command(ModifyVisibleAlbums);
 			ToggleSortingDirectionCommand = new Command(ToggleSortingDirection);

@@ -4,128 +4,127 @@ using SpotifyLibraryManager.Database;
 using SpotifyLibraryManager.Helpers;
 using SpotifyLibraryManager.Models;
 using System.Collections.Generic;
-using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 
 namespace SpotifyLibraryManager.Services
 {
-    public static class AlbumsProvider
-    {
-        private static async Task<List<SavedAlbum>> LoadAllFromSpotify()
-        {
-            var albums = new List<SavedAlbum>();
+	public static class AlbumsProvider
+	{
+		private static async Task<List<SavedAlbum>> LoadAllFromSpotify()
+		{
+			var albums = new List<SavedAlbum>();
 
-            if (Spotify.Client is null)
-            {
-                return albums;
-            }
-            else
-            {
-                var currentPage = await Spotify.Client.Library.GetAlbums(new LibraryAlbumsRequest { Limit = 50, Offset = 0 });
+			if (Spotify.Client is null)
+			{
+				return albums;
+			}
+			else
+			{
+				var currentPage = await Spotify.Client.Library.GetAlbums(new LibraryAlbumsRequest { Limit = 50, Offset = 0 });
 
-                albums.Concat(currentPage.Items);
-              
-                while (currentPage.Next != null)
-                {
-                    currentPage = await Spotify.Client.Library.GetAlbums(new LibraryAlbumsRequest { Limit = 50, Offset = albums.Count });
+				albums.Concat(currentPage.Items);
 
-                    foreach (var item in currentPage.Items)
-                    {
-                        albums.Add(item);
-                    }
-                }
-            }
+				while (currentPage.Next != null)
+				{
+					currentPage = await Spotify.Client.Library.GetAlbums(new LibraryAlbumsRequest { Limit = 50, Offset = albums.Count });
 
-            return albums;
-        }
+					foreach (var item in currentPage.Items)
+					{
+						albums.Add(item);
+					}
+				}
+			}
 
-        public static Album ConvertToDbAlbum(SavedAlbum spotifyAlbum, ref List<Artist> allArtists)
-        {
-            var artists = new List<Artist>();
+			return albums;
+		}
 
-            foreach(var artist in spotifyAlbum.Album.Artists)
-            {
-                var existingArtist = allArtists.FirstOrDefault(ar => ar.Name == artist.Name);
+		public static Album ConvertToDbAlbum(SavedAlbum spotifyAlbum, ref List<Artist> allArtists)
+		{
+			var artists = new List<Artist>();
 
-                if (existingArtist == null)
-                {
-                    Artist newArtist = new Artist { Name = artist.Name };
-                    artists.Add(newArtist);
-                    allArtists.Add(newArtist);
-                }
-                else
-                {
-                    artists.Add(existingArtist);
-                }
-            }
+			foreach (var artist in spotifyAlbum.Album.Artists)
+			{
+				var existingArtist = allArtists.FirstOrDefault(ar => ar.Name == artist.Name);
 
-            return new Album
-            {
-                Title = spotifyAlbum.Album.Name,
-                Artists = artists,
-                CoverUrl = spotifyAlbum.Album.Images[0].Url,
-                ExternalUrl = spotifyAlbum.Album.ExternalUrls["spotify"],
-                SpotifyUri = spotifyAlbum.Album.Uri,
-                TotalTracks = spotifyAlbum.Album.TotalTracks,
-                ReleaseDate = DateTimeCreator.CreateFromString(spotifyAlbum.Album.ReleaseDate),
-                LikeDate = spotifyAlbum.AddedAt
-            };
-        }
+				if (existingArtist == null)
+				{
+					Artist newArtist = new Artist { Name = artist.Name };
+					artists.Add(newArtist);
+					allArtists.Add(newArtist);
+				}
+				else
+				{
+					artists.Add(existingArtist);
+				}
+			}
 
-        public static async Task<List<Album>> SyncAlbums()
-        {
-            var albumsFromSpotify = new List<SavedAlbum>();
+			return new Album
+			{
+				Title = spotifyAlbum.Album.Name,
+				Artists = artists,
+				CoverUrl = spotifyAlbum.Album.Images[0].Url,
+				ExternalUrl = spotifyAlbum.Album.ExternalUrls["spotify"],
+				SpotifyUri = spotifyAlbum.Album.Uri,
+				TotalTracks = spotifyAlbum.Album.TotalTracks,
+				ReleaseDate = DateTimeCreator.CreateFromString(spotifyAlbum.Album.ReleaseDate),
+				LikeDate = spotifyAlbum.AddedAt
+			};
+		}
 
-            if (Spotify.Client is not null)
-            {
-                albumsFromSpotify = await LoadAllFromSpotify();
-            }
+		public static async Task<List<Album>> SyncAlbums()
+		{
+			var albumsFromSpotify = new List<SavedAlbum>();
 
-            using (var db = new LibraryContext())
-            {
-                var albumsFromDb = await db.Albums
-                    .Include(album => album.Artists)
-                    .Include(album => album.Tags)
-                    .ToListAsync();
+			if (Spotify.Client is not null)
+			{
+				albumsFromSpotify = await LoadAllFromSpotify();
+			}
 
-                var allAritsts = await db.Artists.ToListAsync();
+			using (var db = new LibraryContext())
+			{
+				var albumsFromDb = await db.Albums
+					.Include(album => album.Artists)
+					.Include(album => album.Tags)
+					.ToListAsync();
 
-                foreach (var albumFromSpotify in albumsFromSpotify)
-                {
-                    if (albumsFromDb.FirstOrDefault(a => a.Title == albumFromSpotify.Album.Name
-                         && a.Artists.FirstOrDefault()!.Name == albumFromSpotify.Album.Artists[0].Name) is null)
-                    {
-                        db.Albums.Add(ConvertToDbAlbum(albumFromSpotify, ref allAritsts));
-                    }
-                }
+				var allAritsts = await db.Artists.ToListAsync();
 
-                foreach (var albumFromDb in albumsFromDb)
-                {
-                    if (albumsFromSpotify.FirstOrDefault(a => a.Album.Name == albumFromDb.Title
-                         && a.Album.Artists[0].Name == albumFromDb.Artists.FirstOrDefault()!.Name) is null)
-                    {
-                        db.Albums.Remove(albumFromDb);
-                    }
-                }
+				foreach (var albumFromSpotify in albumsFromSpotify)
+				{
+					if (albumsFromDb.FirstOrDefault(a => a.Title == albumFromSpotify.Album.Name
+						 && a.Artists.FirstOrDefault()!.Name == albumFromSpotify.Album.Artists[0].Name) is null)
+					{
+						db.Albums.Add(ConvertToDbAlbum(albumFromSpotify, ref allAritsts));
+					}
+				}
 
-                await db.SaveChangesAsync();
-                return await db.Albums.Include(a => a.Artists).Include(a => a.Tags).OrderByDescending(album => album.LikeDate).ToListAsync();
-            }
-        }
+				foreach (var albumFromDb in albumsFromDb)
+				{
+					if (albumsFromSpotify.FirstOrDefault(a => a.Album.Name == albumFromDb.Title
+						 && a.Album.Artists[0].Name == albumFromDb.Artists.FirstOrDefault()!.Name) is null)
+					{
+						db.Albums.Remove(albumFromDb);
+					}
+				}
 
-        public static async Task<List<Album>> GetAlbumsFromDb()
-        {
-            using (var db = new LibraryContext())
-            {
-                var albumsFromDb = await db.Albums
-                    .Include(album => album.Artists)
-                    .Include(album => album.Tags)
-                    .OrderByDescending(album => album.LikeDate)
-                    .ToListAsync();
+				await db.SaveChangesAsync();
+				return await db.Albums.Include(a => a.Artists).Include(a => a.Tags).ToListAsync();
+			}
+		}
 
-                return albumsFromDb;
-            }
-        }
-    }
+		public static async Task<List<Album>> GetAlbumsFromDb()
+		{
+			using (var db = new LibraryContext())
+			{
+				var albumsFromDb = await db.Albums
+					.Include(album => album.Artists)
+					.Include(album => album.Tags)
+					.OrderByDescending(album => album.LikeDate)
+					.ToListAsync();
+
+				return albumsFromDb;
+			}
+		}
+	}
 }
