@@ -31,9 +31,9 @@ namespace SpotifyLibraryManager.Pages
 			SearchText.Dispatcher.BeginInvoke(() => SearchText.SelectAll());
 		}
 
-		private void SearchText_TextChanged(object sender, TextChangedEventArgs e)
-		{
-			SearchBtn.Command.Execute(SearchText.Text);
-		}
+		//private void SearchText_TextChanged(object sender, TextChangedEventArgs e)
+		//{
+		//	SearchBtn.Command.Execute(SearchText.Text);
+		//}
 	}
 }

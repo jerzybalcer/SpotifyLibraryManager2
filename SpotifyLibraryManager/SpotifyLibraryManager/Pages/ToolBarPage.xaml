@@ -57,7 +57,7 @@
             <Grid>
                 <TextBox Style="{StaticResource CustomTextBox}" x:Name="SearchText" Width="100"
                      VerticalAlignment="Stretch" HorizontalAlignment="Right" Background="#383838" Foreground="White" FontSize="16" Padding="10,2,10,2"
-                         PreviewKeyDown="SearchText_PreviewKeyDown" GotKeyboardFocus="SearchText_GotKeyboardFocus" TextChanged="SearchText_TextChanged" />
+                         PreviewKeyDown="SearchText_PreviewKeyDown" GotKeyboardFocus="SearchText_GotKeyboardFocus" />
                 <TextBlock IsHitTestVisible="False" Text="Search" FontSize="16" VerticalAlignment="Center" HorizontalAlignment="Left" Margin="10,0,0,0" Foreground="White">
                     <TextBlock.Style>
                         <Style TargetType="{x:Type TextBlock}">
