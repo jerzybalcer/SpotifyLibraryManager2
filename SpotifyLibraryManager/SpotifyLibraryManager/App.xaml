@@ -12,6 +12,8 @@
                 <ResourceDictionary Source="/ResourceDictionaries/ToolBarButtonStyle.xaml"/>
                 <ResourceDictionary Source="/ResourceDictionaries/CustomTextBox.xaml"/>
                 <ResourceDictionary Source="/ResourceDictionaries/CustomMenu.xaml"/>
+                <ResourceDictionary Source="/ResourceDictionaries/CustomComboBox.xaml"/>
+                <ResourceDictionary Source="/ResourceDictionaries/CustomCheckBox.xaml"/>
             </ResourceDictionary.MergedDictionaries>
         </ResourceDictionary>
     </Application.Resources>
