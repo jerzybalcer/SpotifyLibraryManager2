@@ -1,17 +1,26 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Configuration;
-using System.Data;
+﻿using System.Diagnostics;
 using System.Linq;
-using System.Threading.Tasks;
 using System.Windows;
 
 namespace SpotifyLibraryManager
 {
-    /// <summary>
-    /// Interaction logic for App.xaml
-    /// </summary>
-    public partial class App : Application
-    {
-    }
+	public partial class App : Application
+	{
+		protected void ApplicationStartup(object sender, StartupEventArgs e)
+		{
+			Process currentProcess = Process.GetCurrentProcess();
+			int appInstancesCount = Process.GetProcesses().Where(p => p.ProcessName == currentProcess.ProcessName).Count();
+
+			if (appInstancesCount > 1)
+			{
+				MessageBox.Show("Already an instance of Spotify Library Manager is running.");
+				App.Current.Shutdown();
+			}
+
+			// Launch main window of the application.
+			var appMainWindow = new MainWindow();
+			Current.MainWindow = appMainWindow;
+			appMainWindow.Show();
+		}
+	}
 }
