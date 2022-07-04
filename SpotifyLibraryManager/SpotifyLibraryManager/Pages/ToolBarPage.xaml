@@ -1,10 +1,10 @@
 ﻿<Page x:Class="SpotifyLibraryManager.Pages.ToolBarPage"
       xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
       xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-      xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-      xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-      xmlns:local="clr-namespace:SpotifyLibraryManager.Pages"
-      xmlns:converters="clr-namespace:SpotifyLibraryManager.Helpers.Converters"
+      xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+      xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+      xmlns:local="clr-namespace:SpotifyLibraryManager.Pages" 
+      xmlns:converters="clr-namespace:SpotifyLibraryManager.Helpers.Converters" 
       xmlns:userControls="clr-namespace:SpotifyLibraryManager.UserControls"
       xmlns:models="clr-namespace:SpotifyLibraryManager.Models"
       mc:Ignorable="d"
@@ -12,38 +12,50 @@
       Title="ToolBarPage" KeyboardNavigation.TabNavigation="None">
 
     <Page.Resources>
-        <converters:HexBrushConverter x:Key="HexBrushConverter" />
+        <converters:HexBrushConverter x:Key="HexBrushConverter"/>
     </Page.Resources>
 
     <Grid>
         <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="*" />
-            <ColumnDefinition Width="*" />
-            <ColumnDefinition Width="*" />
-            <ColumnDefinition Width="*" />
-            <ColumnDefinition Width="*" />
+            <ColumnDefinition Width="1.5*"/>
+            <ColumnDefinition Width="1.5*"/>
+            <ColumnDefinition Width="2*"/>
+            <ColumnDefinition Width="*"/>
         </Grid.ColumnDefinitions>
 
-        <!--Refresh albums-->
-        <Button Content="Sync" Foreground="White" Grid.Column="0" Style="{StaticResource ToolBarButtonStyle}"
-                 Padding="10,0,10,0" HorizontalAlignment="Center" VerticalAlignment="Stretch"
-                 x:Name="SyncBtn" Margin="15,0,15,0" FontSize="16" Command="{Binding SyncCommand}" />
+        <Grid.RowDefinitions>
+            <RowDefinition Height="auto"/>
+            <RowDefinition/>
+        </Grid.RowDefinitions>
+
+        <TextBlock Text="SORT" Foreground="#b3b3b3" FontSize="14" FontWeight="DemiBold" HorizontalAlignment="Center" Margin="0,0,0,5"/>
 
         <!--Sort Menu-->
-        <StackPanel Orientation="Horizontal" Grid.Column="1" VerticalAlignment="Stretch" HorizontalAlignment="Center" x:Name="SortStackPanel" Margin="15,0,15,0">
-            <userControls:SortMenu CheckedOption="{Binding SortBy, Mode=TwoWay}" />
-            <Button Style="{StaticResource ToolBarButtonStyle}" Background="#383838" Foreground="White" Width="20" Height="20"
+        <StackPanel Orientation="Horizontal" Grid.Column="0" Grid.Row="1" VerticalAlignment="Stretch" HorizontalAlignment="Center" x:Name="SortStackPanel">
+            <Border CornerRadius="5" Background="#121212" Padding="5">
+                <TextBlock Text="by" Foreground="#b3b3b3" VerticalAlignment="Center"/>
+            </Border>
+            <ComboBox Style="{StaticResource CustomComboBox}">
+                <ComboBoxItem Content="Title"/>
+                <ComboBoxItem Content="Artist"/>
+                <ComboBoxItem Content="ReleaseDate"/>
+                <ComboBoxItem Content="LikeDate" IsSelected="True"/>
+            </ComboBox>
+            <Border CornerRadius="5" Background="#121212" Padding="5">
+                <TextBlock Text="direction" Foreground="#b3b3b3" VerticalAlignment="Center"/>
+            </Border>
+            <Button Style="{StaticResource ToolBarButtonStyle}" Background="#383838" Foreground="White" 
                     x:Name="SortDirectionChanger" Command="{Binding ToggleSortingDirectionCommand}">
-                <TextBlock x:Name="SortDirection" VerticalAlignment="Center">
+                <TextBlock x:Name="SortDirection" VerticalAlignment="Center" HorizontalAlignment="Center" FontSize="16" Padding="2">
                     <TextBlock.Style>
                         <Style TargetType="{x:Type TextBlock}">
-                            <Setter Property="Text" Value="⋁" />
+                            <Setter Property="Text" Value="⋁"/>
                             <Style.Triggers>
                                 <DataTrigger Binding="{Binding IsSortingAscending}" Value="False">
-                                    <Setter Property="Text" Value="⋁" />
+                                    <Setter Property="Text" Value="⋀"/>
                                 </DataTrigger>
                                 <DataTrigger Binding="{Binding IsSortingAscending}" Value="True">
-                                    <Setter Property="Text" Value="⋀" />
+                                    <Setter Property="Text" Value="⋁"/>
                                 </DataTrigger>
                             </Style.Triggers>
                         </Style>
@@ -51,66 +63,69 @@
                 </TextBlock>
             </Button>
         </StackPanel>
+        <!--⋁⋀-->
+        <TextBlock Text="SEARCH" Foreground="#b3b3b3" FontSize="14" FontWeight="DemiBold" HorizontalAlignment="Center" Margin="0,0,0,5" Grid.Column="1"/>
 
         <!--Search Bar-->
-        <StackPanel Orientation="Horizontal" Grid.Column="2" VerticalAlignment="Stretch" x:Name="SearchStackPanel" Margin="15,0,15,0">
+        <StackPanel Orientation="Horizontal" Grid.Column="1" Grid.Row="1" VerticalAlignment="Stretch" HorizontalAlignment="Center" x:Name="SearchStackPanel">
+            <Border CornerRadius="5" Background="#121212" Padding="5">
+                <TextBlock Text="for" Foreground="#b3b3b3" VerticalAlignment="Center"/>
+            </Border>
             <Grid>
                 <TextBox Style="{StaticResource CustomTextBox}" x:Name="SearchText" Width="100"
-                     VerticalAlignment="Stretch" HorizontalAlignment="Right" Background="#383838" Foreground="White" FontSize="16" Padding="10,2,10,2"
-                         PreviewKeyDown="SearchText_PreviewKeyDown" GotKeyboardFocus="SearchText_GotKeyboardFocus" />
-                <TextBlock IsHitTestVisible="False" Text="Search" FontSize="16" VerticalAlignment="Center" HorizontalAlignment="Left" Margin="10,0,0,0" Foreground="White">
+                     VerticalAlignment="Stretch" HorizontalAlignment="Right" Background="#383838" Foreground="White" FontSize="16" Padding="10,0,10,0"
+                         PreviewKeyDown="SearchText_PreviewKeyDown" GotKeyboardFocus="SearchText_GotKeyboardFocus"/>
+                <TextBlock IsHitTestVisible="False" Text="Artist / Title" FontSize="16" VerticalAlignment="Center" HorizontalAlignment="Left" Margin="5,0,0,0" Foreground="White">
                     <TextBlock.Style>
                         <Style TargetType="{x:Type TextBlock}">
-                            <Setter Property="Visibility" Value="Collapsed" />
+                            <Setter Property="Visibility" Value="Collapsed"/>
                             <Style.Triggers>
                                 <DataTrigger Binding="{Binding Text, ElementName=SearchText}" Value="">
-                                    <Setter Property="Visibility" Value="Visible" />
+                                    <Setter Property="Visibility" Value="Visible"/>
                                 </DataTrigger>
                             </Style.Triggers>
                         </Style>
                     </TextBlock.Style>
                 </TextBlock>
             </Grid>
-            <Button x:Name="SearchBtn" Style="{StaticResource ToolBarButtonStyle}" Background="#383838" Foreground="White"
-                    Width="20" Height="20" Command="{Binding SearchCommand}" CommandParameter="{Binding ElementName=SearchText,Path=Text}">
-                <TextBlock Text="🔎︎" FontSize="12" VerticalAlignment="Center" />
+            <Button x:Name="SearchBtn" Style="{StaticResource ToolBarButtonStyle}" Background="#383838" Foreground="White" 
+                    Command="{Binding SearchCommand}" CommandParameter="{Binding ElementName=SearchText,Path=Text}" Padding="0">
+                <TextBlock Text="🔎︎" FontSize="16" VerticalAlignment="Center" Padding="2"/>
             </Button>
         </StackPanel>
+
+        <TextBlock Text="FILTER" Foreground="#b3b3b3" FontSize="14" FontWeight="DemiBold" HorizontalAlignment="Center" Margin="0,0,0,5" Grid.Column="2"/>
 
         <!--Filter Menu-->
-        <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="Center"
-                                    Grid.Column="3" Margin="15,0,15,0">
+        <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="Center" 
+                                    Grid.Column="2" Grid.Row="1">
+            
+            <Border CornerRadius="5" Background="#121212" Padding="5">
+                <TextBlock Text="require" Foreground="#b3b3b3" VerticalAlignment="Center"/>
+            </Border>
+
+            <ComboBox Style="{StaticResource CustomComboBox}" x:Name="FilterTypeComboBox" Grid.Column="1" VerticalContentAlignment="Center" HorizontalContentAlignment="Center"
+                  VerticalAlignment="Center" HorizontalAlignment="Center">
+                <ComboBoxItem Content="All" IsSelected="True"/>
+                <ComboBoxItem Content="Any"/>
+            </ComboBox>
+
+            <Border CornerRadius="5" Background="#121212" Padding="5">
+                <TextBlock Text="of" Foreground="#b3b3b3" VerticalAlignment="Center"/>
+            </Border>
+
             <userControls:FilterMenu x:Name="FilterMenu" HorizontalContentAlignment="Center"
-                                    Items="{Binding LibraryManager.AllTags}" Filters="{Binding LibraryManager.Filters, Mode=TwoWay}" MenuHeaderText="Filter">
+                                    Items="{Binding LibraryManager.AllTags}" Filters="{Binding LibraryManager.Filters, Mode=TwoWay}">
             </userControls:FilterMenu>
-            <Button Style="{StaticResource ToolBarButtonStyle}" Background="#383838" Foreground="White" Width="20" Height="20"
-                    x:Name="FilterTypeChangeButton" Command="{Binding ChangeFilterTypeCommand}">
-                <TextBlock x:Name="FilterType" VerticalAlignment="Center" FontSize="14">
-                    <TextBlock.Style>
-                        <Style TargetType="{x:Type TextBlock}">
-                            <Setter Property="Text" Value="&amp;" />
-                            <Style.Triggers>
-                                <DataTrigger Binding="{Binding FilterType}" Value="{x:Static models:FilterType.AtLeastOneMatching}">
-                                    <Setter Property="Text" Value="|" />
-                                    <Setter Property="ToolTip" Value="At Least One Matching" />
-                                </DataTrigger>
-                                <DataTrigger Binding="{Binding FilterType}" Value="{x:Static models:FilterType.AllMatching}">
-                                    <Setter Property="Text" Value="&amp;" />
-                                    <Setter Property="ToolTip" Value="All Matching" />
-                                </DataTrigger>
-                                <DataTrigger Binding="{Binding FilterType}" Value="{x:Static models:FilterType.WithNoTags}">
-                                    <Setter Property="Text" Value="0" />
-                                    <Setter Property="ToolTip" Value="With No Tags" />
-                                </DataTrigger>
-                            </Style.Triggers>
-                        </Style>
-                    </TextBlock.Style>
-                </TextBlock>
-            </Button>
         </StackPanel>
 
-        <!--User Menu-->
-        <Button HorizontalAlignment="Center" HorizontalContentAlignment="Center" VerticalAlignment="Stretch" Grid.Column="4" Margin="15,0,15,0"
-                Style="{StaticResource ToolBarButtonStyle}" Command="{Binding LoginCommand}" x:Name="LoginBtn" Content="Login" FontSize="16" Padding="10,2,10,2" />
+        <TextBlock Text="OTHER" Foreground="#b3b3b3" FontSize="14" FontWeight="DemiBold" HorizontalAlignment="Center" Margin="0,0,0,5" Grid.Column="3"/>
+        <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="Center" 
+                                    Grid.Column="3" Grid.Row="1">
+            <Border CornerRadius="5" Background="#121212" Padding="5">
+                <TextBlock Text="show tagless" Foreground="#b3b3b3" VerticalAlignment="Center"/>
+            </Border>
+            <CheckBox Style="{StaticResource CustomCheckBox}" VerticalAlignment="Center" HorizontalAlignment="Center"/>
+        </StackPanel>
     </Grid>
 </Page>

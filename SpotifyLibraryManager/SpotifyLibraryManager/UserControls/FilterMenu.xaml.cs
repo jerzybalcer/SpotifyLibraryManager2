@@ -1,6 +1,8 @@
 ﻿using SpotifyLibraryManager.Models;
 using System.Collections;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
@@ -13,14 +15,15 @@ namespace SpotifyLibraryManager.UserControls
     public partial class FilterMenu : UserControl
     {
         public static readonly DependencyProperty ItemsProperty = DependencyProperty.Register("Items", typeof(IList), typeof(UserControl));
+
+        public static readonly DependencyProperty FiltersProperty = DependencyProperty.Register("Filters", typeof(ObservableCollection<Tag>), typeof(UserControl),
+            new FrameworkPropertyMetadata(new ObservableCollection<Tag>(), FrameworkPropertyMetadataOptions.BindsTwoWayByDefault));
+
         public IList Items
         {
             get => (IList)GetValue(ItemsProperty);
             set => SetValue(ItemsProperty, value);
         }
-
-        public static readonly DependencyProperty FiltersProperty = DependencyProperty.Register("Filters", typeof(ObservableCollection<Tag>), typeof(UserControl), 
-            new FrameworkPropertyMetadata(new ObservableCollection<Tag>(), FrameworkPropertyMetadataOptions.BindsTwoWayByDefault));
 
         public ObservableCollection<Tag> Filters
         {
@@ -28,7 +31,7 @@ namespace SpotifyLibraryManager.UserControls
             set => SetValue(FiltersProperty, value);
         }
 
-        public string MenuHeaderText { get; set; }
+        private List<TextBlock> _checkMarks = new List<TextBlock>();
 
         public FilterMenu()
         {
@@ -50,11 +53,6 @@ namespace SpotifyLibraryManager.UserControls
             }
         }
 
-        private void ThisControl_Loaded(object sender, RoutedEventArgs e)
-        {
-            MenuHeader.Content = MenuHeaderText;
-        }
-
         private void Popup_MouseLeave(object sender, MouseEventArgs e)
         {
             if (Popup.IsOpen)
@@ -74,10 +72,23 @@ namespace SpotifyLibraryManager.UserControls
             if (Filters.Contains(tag))
             {
                 Filters.Remove(tag);
+                _checkMarks.Remove(checkMark);
             }
             else
             {
                 Filters.Add(tag);
+                _checkMarks.Add(checkMark);
+            }
+        }
+
+        private void ClearButton_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
+        {
+            if(Filters.Count > 0)
+            {
+                Filters.Clear();
+
+                _checkMarks.ForEach(mark => mark.Visibility = Visibility.Hidden);
+                _checkMarks.Clear();
             }
         }
     }

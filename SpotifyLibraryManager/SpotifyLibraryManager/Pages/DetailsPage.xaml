@@ -6,7 +6,7 @@
       xmlns:local="clr-namespace:SpotifyLibraryManager.Pages" xmlns:userControls="clr-namespace:SpotifyLibraryManager.UserControls"
       mc:Ignorable="d" 
       d:DesignHeight="450" d:DesignWidth="800"
-      Title="DetailsPage" MouseLeftButtonDown="Page_MouseLeftButtonDown" Loaded="Page_Loaded">
+      Title="DetailsPage" MouseLeftButtonDown="Page_MouseLeftButtonDown" Loaded="Page_Loaded" Focusable="True">
 
     <Grid Background="#121212">
         <Grid.RowDefinitions>
@@ -39,47 +39,31 @@
 
         <Grid Grid.Row="2" Grid.ColumnSpan="2" Margin="20,0,20,20">
             <TextBlock Text="Tags" Foreground="White" FontSize="24" FontWeight="DemiBold" HorizontalAlignment="Left" VerticalAlignment="Center"/>
-            <Border x:Name="NewTagButton" CornerRadius="15" VerticalAlignment="Center" HorizontalAlignment="Right" 
-                    Cursor="Hand" MouseLeftButtonDown="NewTagButton_MouseLeftButtonDown">
-                <TextBlock Text="Add +" Foreground="White" FontWeight="Medium" FontSize="16" Padding="10,5,10,5" VerticalAlignment="Center"/>
-                <Border.Style>
-                    <Style TargetType="{x:Type Border}">
-                        <Style.Triggers>
-                            <Trigger Property="IsMouseOver" Value="True">
-                                <Setter Property="Background" Value="#575757"/>
-                            </Trigger>
-                            <Trigger Property="IsMouseOver" Value="False">
-                                <Setter Property="Background" Value="#282828"/>
-                            </Trigger>
-                            <DataTrigger Binding="{Binding ElementName=NewTagNamePopup, Path=IsOpen}" Value="True">
-                                <Setter Property="Background" Value="#575757"/>
-                            </DataTrigger>
-                        </Style.Triggers>
-                    </Style>
-                </Border.Style>
-            </Border>
-
-            <Popup x:Name="NewTagNamePopup" PlacementTarget="{Binding ElementName=NewTagButton}" Placement="Left" VerticalOffset="3" VerticalAlignment="Center" IsOpen="False" 
-                   AllowsTransparency="True">
-                <Grid>
-                    <TextBox x:Name="NewTag" Style="{StaticResource CustomTextBox}" MinHeight="25" MinWidth="150" TextChanged="NewTag_TextChanged" 
-                             Margin="0,0,5,0" FontSize="14" Text="{Binding NewTagText, Mode=OneWayToSource, UpdateSourceTrigger=PropertyChanged}"
+            <Border CornerRadius="15" VerticalAlignment="Center" HorizontalAlignment="Right" Background="#383838">
+                <StackPanel Orientation="Horizontal">
+                    <Grid>
+                        <TextBox x:Name="NewTag" Style="{StaticResource CustomTextBox}" MinHeight="25" MinWidth="150" TextChanged="NewTag_TextChanged" 
+                             Margin="0,0,-12,0" FontSize="14" Text="{Binding NewTagText, Mode=OneWayToSource, UpdateSourceTrigger=PropertyChanged}"
                              LostKeyboardFocus="NewTag_LostKeyboardFocus" PreviewKeyDown="NewTag_PreviewKeyDown"/>
-                    <TextBlock IsHitTestVisible="False" Text="Enter tag name" VerticalAlignment="Center" HorizontalAlignment="Left" Margin="10,0,0,0" 
+                        <TextBlock IsHitTestVisible="False" Text="Enter tag name" VerticalAlignment="Center" HorizontalAlignment="Left" Margin="10,0,0,0" 
                                Foreground="White" FontSize="14">
-                        <TextBlock.Style>
-                            <Style TargetType="{x:Type TextBlock}">
-                                <Setter Property="Visibility" Value="Collapsed"/>
-                                <Style.Triggers>
-                                    <DataTrigger Binding="{Binding Text, ElementName=NewTag}" Value="">
-                                        <Setter Property="Visibility" Value="Visible"/>
-                                    </DataTrigger>
-                                </Style.Triggers>
-                            </Style>
-                        </TextBlock.Style>
-                    </TextBlock>
-                </Grid>
-            </Popup>
+                            <TextBlock.Style>
+                                <Style TargetType="{x:Type TextBlock}">
+                                    <Setter Property="Visibility" Value="Collapsed"/>
+                                    <Style.Triggers>
+                                        <DataTrigger Binding="{Binding Text, ElementName=NewTag}" Value="">
+                                            <Setter Property="Visibility" Value="Visible"/>
+                                        </DataTrigger>
+                                    </Style.Triggers>
+                                </Style>
+                            </TextBlock.Style>
+                        </TextBlock>
+                    </Grid>
+                    <Border CornerRadius="15" Background="#282828">
+                        <TextBlock Text="Add +" Foreground="White" FontWeight="Medium" FontSize="16" Padding="10,5,10,5" VerticalAlignment="Center"/>
+                    </Border>
+                </StackPanel>
+            </Border>
         </Grid>
 
         <StackPanel Grid.Row="3" Margin="20,0,0,10" Orientation="Horizontal">

@@ -56,20 +56,6 @@ namespace SpotifyLibraryManager.Pages
             SuggestionPopup.IsOpen = true;
         }
 
-        private void NewTagButton_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
-        {
-            NewTagNamePopup.IsOpen = !NewTagNamePopup.IsOpen;
-
-            if (NewTagNamePopup.IsOpen)
-            {
-                NewTag.Focus();
-            }
-            else
-            {
-                Keyboard.Focus(Window.GetWindow(this));
-            }
-        }
-
         private void NewTag_LostKeyboardFocus(object sender, KeyboardFocusChangedEventArgs e)
         {
             NewTag.Text = "";
@@ -77,9 +63,9 @@ namespace SpotifyLibraryManager.Pages
 
         private void Page_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
         {
-            if (!NewTagButton.IsMouseOver)
+            if (!NewTag.IsMouseOver)
             {
-                Keyboard.Focus(Window.GetWindow(this));
+                Keyboard.Focus(this);
             }
         }
 
@@ -100,7 +86,7 @@ namespace SpotifyLibraryManager.Pages
             }
             else if (e.Key == Key.Escape)
             {
-                Keyboard.Focus(Window.GetWindow(this));
+                Keyboard.Focus(this);
             }
             else if (e.Key == Key.Tab)
             {
@@ -150,13 +136,6 @@ namespace SpotifyLibraryManager.Pages
             {
                 if (!SuggestionPopup.IsOpen)
                 {
-                    if (!NewTagNamePopup.IsOpen && NoAlbumSelected.Visibility != Visibility.Visible)
-                    {
-                        NewTagNamePopup.IsOpen = true;
-
-                        e.Handled = true;
-                    }
-
                     NewTag.Focus();
                 }
                 else
