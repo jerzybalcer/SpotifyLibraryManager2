@@ -13,30 +13,30 @@ namespace SpotifyLibraryManager.Services
 	{
 		private static async Task<List<SavedAlbum>> LoadAllFromSpotify()
 		{
-			var albums = new List<SavedAlbum>();
+			var allAlbums = new List<SavedAlbum>();
 
 			if (Spotify.Client is null)
 			{
-				return albums;
+				return allAlbums;
 			}
 			else
 			{
-				var currentPage = await Spotify.Client.Library.GetAlbums(new LibraryAlbumsRequest { Limit = 50, Offset = 0 });
+				var currentAlbumsFragment = await Spotify.Client.Library.GetAlbums(new LibraryAlbumsRequest { Limit = 50, Offset = 0 });
 
-				albums.Concat(currentPage.Items);
+				allAlbums.Concat(currentAlbumsFragment.Items);
 
-				while (currentPage.Next != null)
+				while (currentAlbumsFragment.Next != null)
 				{
-					currentPage = await Spotify.Client.Library.GetAlbums(new LibraryAlbumsRequest { Limit = 50, Offset = albums.Count });
+					currentAlbumsFragment = await Spotify.Client.Library.GetAlbums(new LibraryAlbumsRequest { Limit = 50, Offset = allAlbums.Count });
 
-					foreach (var item in currentPage.Items)
+					foreach (var item in currentAlbumsFragment.Items)
 					{
-						albums.Add(item);
+						allAlbums.Add(item);
 					}
 				}
 			}
 
-			return albums;
+			return allAlbums;
 		}
 
 		public static Album ConvertToDbAlbum(SavedAlbum spotifyAlbum, ref List<Artist> allArtists)
@@ -74,37 +74,39 @@ namespace SpotifyLibraryManager.Services
 
 		public static async Task<List<Album>> SyncAlbums()
 		{
-			var albumsFromSpotify = new List<SavedAlbum>();
+			var albumsSpotify = new List<SavedAlbum>();
 
 			if (Spotify.Client is not null)
 			{
-				albumsFromSpotify = await LoadAllFromSpotify();
+				albumsSpotify = await LoadAllFromSpotify();
 			}
 
 			using (var db = new LibraryContext())
 			{
-				var albumsFromDb = await db.Albums
+				var albumsDatabase = await db.Albums
 					.Include(album => album.Artists)
 					.Include(album => album.Tags)
 					.ToListAsync();
 
-				var allAritsts = await db.Artists.ToListAsync();
+				var artistsDatabase = await db.Artists.ToListAsync();
 
-				foreach (var albumFromSpotify in albumsFromSpotify)
+				// Add albums that are missing in the database.
+				foreach (var albumSpotify in albumsSpotify)
 				{
-					if (albumsFromDb.FirstOrDefault(a => a.Title == albumFromSpotify.Album.Name
-						 && a.Artists.FirstOrDefault()!.Name == albumFromSpotify.Album.Artists[0].Name) is null)
+					if (albumsDatabase.FirstOrDefault(a => a.Title == albumSpotify.Album.Name
+						 && a.Artists.FirstOrDefault()!.Name == albumSpotify.Album.Artists[0].Name) is null)
 					{
-						db.Albums.Add(ConvertToDbAlbum(albumFromSpotify, ref allAritsts));
+						db.Albums.Add(ConvertToDbAlbum(albumSpotify, ref artistsDatabase));
 					}
 				}
 
-				foreach (var albumFromDb in albumsFromDb)
+				// Remove albums that are not in the Spotify library anymore.
+				foreach (var albumDatabase in albumsDatabase)
 				{
-					if (albumsFromSpotify.FirstOrDefault(a => a.Album.Name == albumFromDb.Title
-						 && a.Album.Artists[0].Name == albumFromDb.Artists.FirstOrDefault()!.Name) is null)
+					if (albumsSpotify.FirstOrDefault(a => a.Album.Name == albumDatabase.Title
+						 && a.Album.Artists[0].Name == albumDatabase.Artists.FirstOrDefault()!.Name) is null)
 					{
-						db.Albums.Remove(albumFromDb);
+						db.Albums.Remove(albumDatabase);
 					}
 				}
 
