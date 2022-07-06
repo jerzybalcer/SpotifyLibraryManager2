@@ -2,130 +2,140 @@
 using SpotifyLibraryManager.Database;
 using SpotifyLibraryManager.Helpers;
 using SpotifyLibraryManager.Models;
-using System.Collections.ObjectModel;
 using System.Linq;
 
 namespace SpotifyLibraryManager.ViewModels
 {
-    public class DetailsPanelViewModel : ViewModelBase
-    {
-        public LibraryManager LibraryManager { get; private set; }
-        public bool IsSuggestionPopupOpen { get; set; }
-        public string NewTagText { get; set; }
-        public Command AddTagCommand { get; set; }
-        public Command RemoveTagCommand { get; set; }
+	public class DetailsPanelViewModel : ViewModelBase
+	{
+		public LibraryManager LibraryManager { get; private set; }
+		public bool IsSuggestionPopupOpen { get; set; }
+		public string NewTagText { get; set; }
+		public Command AddTagCommand { get; set; }
+		public Command RemoveTagCommand { get; set; }
 
-        public string ArtistsString
-        {
-            get 
-            {
-                if(LibraryManager.SelectedAlbum is null || LibraryManager.SelectedAlbum.Artists is null)
-                {
-                    return string.Empty;
-                }
+		private ToolBarViewModel toolBarContext;
 
-                string returnString = LibraryManager.SelectedAlbum.Artists[0].Name;
+		public string ArtistsString
+		{
+			get
+			{
+				if (LibraryManager.SelectedAlbum is null || LibraryManager.SelectedAlbum.Artists is null)
+				{
+					return string.Empty;
+				}
 
-                for (var i = 1; i < LibraryManager.SelectedAlbum.Artists.Count; i++)
-                {
-                    returnString += ", " + LibraryManager.SelectedAlbum.Artists[i].Name;
-                }
+				string returnString = LibraryManager.SelectedAlbum.Artists[0].Name;
 
-                return returnString;
-            }
-        }
+				for (var i = 1; i < LibraryManager.SelectedAlbum.Artists.Count; i++)
+				{
+					returnString += ", " + LibraryManager.SelectedAlbum.Artists[i].Name;
+				}
 
-        public DetailsPanelViewModel(LibraryManager libraryManager)
-        {
-            LibraryManager = libraryManager;
-            AddTagCommand = new Command(AddTag);
-            RemoveTagCommand = new Command(RemoveTag);
+				return returnString;
+			}
+		}
 
-            LibraryManager.AlbumSelected += (s, e) => OnPropertyChanged(nameof(ArtistsString));
-        }
+		public DetailsPanelViewModel(LibraryManager libraryManager, ToolBarViewModel toolbar)
+		{
+			LibraryManager = libraryManager;
+			toolBarContext = toolbar;
+			AddTagCommand = new Command(AddTag);
+			RemoveTagCommand = new Command(RemoveTag);
 
-        private async void AddTag(object param)
-        {
-            string tagName = (string)param;
-            IsSuggestionPopupOpen = false;
+			LibraryManager.AlbumSelected += (s, e) => OnPropertyChanged(nameof(ArtistsString));
+		}
 
-            using (var db = new LibraryContext())
-            {
-                var thisAlbum = db.Albums
-                    .Include(album => album.Tags)
-                    .Include(album => album.Artists)
-                    .First(album => album.AlbumId == LibraryManager.SelectedAlbum.AlbumId);
+		private async void AddTag(object param)
+		{
+			string tagName = (string) param;
+			IsSuggestionPopupOpen = false;
 
-                if (LibraryManager.AllTags.ToList().Exists(tag => tag.Name.ToLower() == tagName.ToLower()) == false)
-                {
-                    thisAlbum.Tags.Add(new Tag { Name = tagName, ColorHex = RandomHexGenerator.GenerateRandomHex() });
-                    LibraryManager.AllTags.Add(thisAlbum.Tags.Last());
-                }
-                else
-                {
-                    if (thisAlbum.Tags.FirstOrDefault(tag => tag.Name.ToLower() == tagName.ToLower()) is null)
-                    {
-                        thisAlbum.Tags.Add(LibraryManager.AllTags.First(tag => tag.Name.ToLower() == tagName.ToLower()));
-                    }
-                }
-                await db.SaveChangesAsync();
-                OnTagUpdate(thisAlbum);
-            }
-        }
+			using (var db = new LibraryContext())
+			{
+				var thisAlbum = db.Albums
+					.Include(album => album.Tags)
+					.Include(album => album.Artists)
+					.First(album => album.AlbumId == LibraryManager.SelectedAlbum.AlbumId);
 
-        private async void RemoveTag(object param)
-        {
-            string tagName = (string)param;
+				bool tagExists = LibraryManager.AllTags.ToList().Exists(tag => tag.Name.ToLower() == tagName.ToLower());
 
-            using (var db = new LibraryContext())
-            {
-                var thisAlbum = db.Albums
-                    .Include(album => album.Tags)
-                    .Include(album => album.Artists)
-                    .First(album => album.AlbumId == LibraryManager.SelectedAlbum.AlbumId);
+				if (!tagExists)
+				{
+					thisAlbum.Tags.Add(new Tag { Name = tagName, ColorHex = RandomHexGenerator.GenerateRandomHex() });
+					LibraryManager.AllTags.Add(thisAlbum.Tags.Last());
+				}
+				else
+				{
+					bool albumNotTaggedWithIt = thisAlbum.Tags.FirstOrDefault(tag => tag.Name.ToLower() == tagName.ToLower()) is null;
 
-                var tagToRemove = thisAlbum.Tags.First(tag => tag.Name.ToLower() == tagName.ToLower());
+					if (albumNotTaggedWithIt)
+					{
+						thisAlbum.Tags.Add(LibraryManager.AllTags.First(tag => tag.Name.ToLower() == tagName.ToLower()));
+					}
+				}
+				await db.SaveChangesAsync();
+				OnTagUpdate(thisAlbum);
+			}
+		}
 
-                thisAlbum.Tags.Remove(tagToRemove);
+		private async void RemoveTag(object param)
+		{
+			string tagName = (string) param;
 
-                if(db.Tags.AsNoTracking().Include(t => t.Albums).Single(tag => tag.TagId == tagToRemove.TagId).Albums.Count == 1)
-                {
-                    db.Tags.Remove(tagToRemove);
-                    LibraryManager.AllTags.Remove(LibraryManager.AllTags.Single(t => t.TagId == tagToRemove.TagId));
-                    LibraryManager.Filters.Remove(LibraryManager.Filters.FirstOrDefault(f => f.TagId == tagToRemove.TagId));
-                }
+			using (var db = new LibraryContext())
+			{
+				var thisAlbum = db.Albums
+					.Include(album => album.Tags)
+					.Include(album => album.Artists)
+					.First(album => album.AlbumId == LibraryManager.SelectedAlbum.AlbumId);
 
-                await db.SaveChangesAsync();
-                OnTagUpdate(thisAlbum);
-            }
-        }
+				var tagToRemove = thisAlbum.Tags.First(tag => tag.Name.ToLower() == tagName.ToLower());
 
-        public Tag? GetSuggestionTag()
-        {
-            var equalTag = LibraryManager.AllTags.FirstOrDefault(tag => tag.Name.ToLower() == NewTagText.ToLower());
+				thisAlbum.Tags.Remove(tagToRemove);
 
-            if (equalTag is not null)
-            {
-                return equalTag;
-            }
-            else
-            {
-                return LibraryManager.AllTags.Where(tag => tag.Name.ToLower().StartsWith(NewTagText.ToLower())).FirstOrDefault();
-            }
-        }
+				bool isTagAssignedToSingleAlbum = db.Tags.AsNoTracking().Include(t => t.Albums).Single(tag => tag.TagId == tagToRemove.TagId).Albums.Count == 1;
 
-        private void OnTagUpdate(Album targetAlbum)
-        {
-            LibraryManager.SelectedAlbum = targetAlbum;
+				if (isTagAssignedToSingleAlbum)
+				{
+					db.Tags.Remove(tagToRemove);
+					LibraryManager.AllTags.Remove(LibraryManager.AllTags.Single(t => t.TagId == tagToRemove.TagId));
+					LibraryManager.Filters.Remove(LibraryManager.Filters.FirstOrDefault(f => f.TagId == tagToRemove.TagId));
+				}
 
-            var indexInVisible = LibraryManager.VisibleAlbums.ToList().FindIndex(a => a.AlbumId == targetAlbum.AlbumId);
+				await db.SaveChangesAsync();
+				OnTagUpdate(thisAlbum);
+			}
+		}
 
-            if(indexInVisible >= 0)
-            {
-                LibraryManager.VisibleAlbums[indexInVisible] = targetAlbum;
-            }
+		public Tag? GetSuggestionTag()
+		{
+			var equalTag = LibraryManager.AllTags.FirstOrDefault(tag => tag.Name.ToLower() == NewTagText.ToLower());
 
-            LibraryManager.AllAlbums[LibraryManager.AllAlbums.ToList().FindIndex(a => a.AlbumId == targetAlbum.AlbumId)] = targetAlbum;
-        }
-    }
+			if (equalTag is not null)
+			{
+				return equalTag;
+			}
+			else
+			{
+				return LibraryManager.AllTags.Where(tag => tag.Name.ToLower().StartsWith(NewTagText.ToLower())).FirstOrDefault();
+			}
+		}
+
+		private void OnTagUpdate(Album targetAlbum)
+		{
+			LibraryManager.SelectedAlbum = targetAlbum;
+
+			var indexInVisible = LibraryManager.VisibleAlbums.ToList().FindIndex(a => a.AlbumId == targetAlbum.AlbumId);
+
+			if (indexInVisible >= 0)
+			{
+				LibraryManager.VisibleAlbums[indexInVisible] = targetAlbum;
+			}
+
+			LibraryManager.AllAlbums[LibraryManager.AllAlbums.ToList().FindIndex(a => a.AlbumId == targetAlbum.AlbumId)] = targetAlbum;
+
+			toolBarContext.ModifyVisibleAlbums(null);
+		}
+	}
 }

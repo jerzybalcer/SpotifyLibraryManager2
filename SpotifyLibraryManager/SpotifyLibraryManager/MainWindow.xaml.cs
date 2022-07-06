@@ -25,8 +25,8 @@ namespace SpotifyLibraryManager
 			var libraryManager = new LibraryManager();
 
 			_albumsListViewModel = new AlbumsListViewModel(libraryManager);
-			var detailsPanel = new DetailsPanelViewModel(libraryManager);
 			toolBarContext = new ToolBarViewModel(libraryManager);
+			var detailsPanel = new DetailsPanelViewModel(libraryManager, toolBarContext);
 
 			this.DataContext = libraryManager;
 			AlbumsList.DataContext = _albumsListViewModel;
