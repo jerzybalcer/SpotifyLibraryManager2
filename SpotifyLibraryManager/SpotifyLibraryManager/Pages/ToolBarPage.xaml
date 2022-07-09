@@ -13,6 +13,8 @@
 
     <Page.Resources>
         <converters:HexBrushConverter x:Key="HexBrushConverter" />
+        <converters:ComboBoxItemFilterRequirementConverter x:Key="ComboBoxItemFilterRequirementConverter" />
+        <converters:ComboBoxItemSortByConverter x:Key="ComboBoxItemSortByConverter" />
     </Page.Resources>
 
     <Grid>
@@ -35,7 +37,7 @@
             <Border CornerRadius="5" Background="#121212" Padding="5">
                 <TextBlock Text="by" Foreground="#b3b3b3" VerticalAlignment="Center" />
             </Border>
-            <ComboBox Style="{StaticResource CustomComboBox}">
+            <ComboBox Style="{StaticResource CustomComboBox}" SelectedValue="{Binding SortBy, Converter={StaticResource ComboBoxItemSortByConverter}, Mode=OneWayToSource}">
                 <ComboBoxItem Content="Title" />
                 <ComboBoxItem Content="Artist" />
                 <ComboBoxItem Content="ReleaseDate" />
@@ -52,10 +54,10 @@
                             <Setter Property="Text" Value="⋁" />
                             <Style.Triggers>
                                 <DataTrigger Binding="{Binding IsSortingAscending}" Value="False">
-                                    <Setter Property="Text" Value="⋀" />
+                                    <Setter Property="Text" Value="⋁" />
                                 </DataTrigger>
                                 <DataTrigger Binding="{Binding IsSortingAscending}" Value="True">
-                                    <Setter Property="Text" Value="⋁" />
+                                    <Setter Property="Text" Value="⋀" />
                                 </DataTrigger>
                             </Style.Triggers>
                         </Style>
@@ -105,7 +107,8 @@
             </Border>
 
             <ComboBox Style="{StaticResource CustomComboBox}" x:Name="FilterTypeComboBox" Grid.Column="1" VerticalContentAlignment="Center" HorizontalContentAlignment="Center"
-                  VerticalAlignment="Center" HorizontalAlignment="Center">
+                  VerticalAlignment="Center" HorizontalAlignment="Center"
+                  SelectedValue="{Binding FilterRequirement, Converter={StaticResource ComboBoxItemFilterRequirementConverter}, Mode=OneWayToSource}">
                 <ComboBoxItem Content="All" IsSelected="True" />
                 <ComboBoxItem Content="Any" />
             </ComboBox>
@@ -125,7 +128,7 @@
             <Border CornerRadius="5" Background="#121212" Padding="5">
                 <TextBlock Text="show tagless" Foreground="#b3b3b3" VerticalAlignment="Center" />
             </Border>
-            <CheckBox Style="{StaticResource CustomCheckBox}" VerticalAlignment="Center" HorizontalAlignment="Center" />
+            <CheckBox Style="{StaticResource CustomCheckBox}" VerticalAlignment="Center" HorizontalAlignment="Center" IsChecked="{Binding ShowTagless}"/>
         </StackPanel>
     </Grid>
 </Page>

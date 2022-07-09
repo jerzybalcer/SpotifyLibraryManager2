@@ -7,188 +7,193 @@ using System.Linq;
 
 namespace SpotifyLibraryManager.ViewModels
 {
-	public class ToolBarViewModel : ViewModelBase
-	{
-		private string _sortBy = "LikeDate";
+    public class ToolBarViewModel : ViewModelBase
+    {
+        private SortBy _sortBy = Models.SortBy.LikeDate;
+        private FilterRequirement _filterRequirement = FilterRequirement.All;
+        private bool _showTagless;
 
-		public LibraryManager LibraryManager { get; private set; }
-		public bool IsSortingAscending { get; set; }
-		public string SearchPhrase { get; set; }
-		public FilterType FilterType { get; set; } = FilterType.AllMatching;
+        public LibraryManager LibraryManager { get; private set; }
+        public bool IsSortingAscending { get; set; }
+        public string SearchPhrase { get; set; }
 
-		public string SortBy
-		{
-			get { return _sortBy; }
-			set { _sortBy = value; ModifyVisibleAlbums(null); }
-		}
+        public FilterRequirement FilterRequirement
+        {
+            get { return _filterRequirement; }
+            set { _filterRequirement = value; ShowTagless = false; ModifyVisibleAlbums(null); }
+        }
 
-		public Command SearchCommand { get; private set; }
-		public Command ToggleSortingDirectionCommand { get; private set; }
-		public Command SyncCommand { get; private set; }
-		public Command LoginCommand { get; private set; }
-		public Command ChangeFilterTypeCommand { get; private set; }
+        public bool ShowTagless
+        {
+            get { return _showTagless; }
+            set { _showTagless = value; ModifyVisibleAlbums(null); }
+        }
 
-		public void ModifyVisibleAlbums(object searchPhraseParam)
-		{
-			// Applied whenever user wants to modify his visible albums (search/sort/filter).
+        public SortBy SortBy
+        {
+            get { return _sortBy; }
+            set { _sortBy = value; ModifyVisibleAlbums(null); }
+        }
 
-			// Update search phrase only whenever user searches.
-			bool isSearchPhraseModified = searchPhraseParam != null; // If it's modified it contains string (empty string if search phrase removed).
-			if (isSearchPhraseModified)
-			{
-				SearchPhrase = (string) searchPhraseParam;
-			}
+        public Command SearchCommand { get; private set; }
+        public Command ToggleSortingDirectionCommand { get; private set; }
+        public Command SyncCommand { get; private set; }
+        public Command LoginCommand { get; private set; }
 
-			// Most optimal way: search -> filter -> sort
-			// That's because search reduces filter time, and sort sorts out results after filtering.
-			ObservableCollection<Album> albumsAfterSearch = SearchAlbums(SearchPhrase);
-			ObservableCollection<Album> albumsAfterSearchAndFilter = FilterAlbums(albumsAfterSearch);
-			SortAndDisplayAlbums(albumsAfterSearchAndFilter);
-		}
+        public void ModifyVisibleAlbums(object searchPhraseParam)
+        {
+            // Applied whenever user wants to modify his visible albums (search/sort/filter).
 
-		private ObservableCollection<Album> SearchAlbums(string searchPhrase)
-		{
-			if (string.IsNullOrEmpty(searchPhrase))
-			{
-				return LibraryManager.AllAlbums;
-			}
-			else
-			{
-				List<Album> matching = new List<Album>();
+            // Update search phrase only whenever user searches.
+            bool isSearchPhraseModified = searchPhraseParam != null; // If it's modified it contains string (empty string if search phrase removed).
+            if (isSearchPhraseModified)
+            {
+                SearchPhrase = (string)searchPhraseParam;
+            }
 
-				foreach (var album in LibraryManager.AllAlbums) // All albums, because search is invoked first in filtering sequence.
-				{
-					foreach (var artist in album.Artists)
-					{
-						if (artist.Name.ToLower().Contains(searchPhrase.ToLower()))
-						{
-							matching.Add(album);
-						}
-					}
+            // Most optimal way: search -> filter -> sort
+            // That's because search reduces filter time, and sort sorts out results after filtering.
+            ObservableCollection<Album> albumsAfterSearch = SearchAlbums(SearchPhrase);
+            ObservableCollection<Album> albumsAfterSearchAndFilter = FilterAlbums(albumsAfterSearch);
+            SortAndDisplayAlbums(albumsAfterSearchAndFilter);
+        }
 
-					if (album.Title.ToLower().Contains(searchPhrase.ToLower()) && !matching.Contains(album))
-					{
-						matching.Add(album);
-					}
-				}
+        private ObservableCollection<Album> SearchAlbums(string searchPhrase)
+        {
+            if (string.IsNullOrEmpty(searchPhrase))
+            {
+                return LibraryManager.AllAlbums;
+            }
+            else
+            {
+                List<Album> matching = new List<Album>();
 
-				return new ObservableCollection<Album>(matching);
-			}
-		}
+                foreach (var album in LibraryManager.AllAlbums) // All albums, because search is invoked first in filtering sequence.
+                {
+                    foreach (var artist in album.Artists)
+                    {
+                        if (artist.Name.ToLower().Contains(searchPhrase.ToLower()))
+                        {
+                            matching.Add(album);
+                        }
+                    }
 
-		private ObservableCollection<Album> FilterAlbums(ObservableCollection<Album> albumsToFilter)
-		{
-			if (LibraryManager.Filters.Count == 0 && FilterType != FilterType.WithNoTags)
-			{
-				// Then no need to filter search results.
-				return albumsToFilter;
-			}
-			else
-			{
-				var matching = new List<Album>();
+                    if (album.Title.ToLower().Contains(searchPhrase.ToLower()) && !matching.Contains(album))
+                    {
+                        matching.Add(album);
+                    }
+                }
 
-				foreach (var album in albumsToFilter)
-				{
-					switch (FilterType)
-					{
-						case FilterType.AllMatching:
-							if (LibraryManager.Filters.All(filter => album.Tags.Any(tag => tag.Name == filter.Name)))
-							{
-								matching.Add(album);
-							}
-							break;
+                return new ObservableCollection<Album>(matching);
+            }
+        }
 
-						case FilterType.AtLeastOneMatching:
-							if (LibraryManager.Filters.Any(filter => album.Tags.Any(tag => tag.Name == filter.Name)))
-							{
-								matching.Add(album);
-							}
-							break;
+        private ObservableCollection<Album> FilterAlbums(ObservableCollection<Album> albumsToFilter)
+        {
+            if (LibraryManager.Filters.Count == 0 && !ShowTagless)
+            {
+                // Then no need to filter search results.
+                return albumsToFilter;
+            }
+            else
+            {
+                var matching = new List<Album>();
 
-						case FilterType.WithNoTags:
-							if (album.Tags.Count == 0)
-							{
-								matching.Add(album);
-							}
-							break;
-					}
-				}
+                foreach (var album in albumsToFilter)
+                {
+                    if (ShowTagless)
+                    {
+                        if (album.Tags.Count == 0)
+                        {
+                            matching.Add(album);
+                        }
+                    }
+                    else
+                    {
+                        if (FilterRequirement == FilterRequirement.All)
+                        {
+                            if (LibraryManager.Filters.All(filter => album.Tags.Any(tag => tag.Name == filter.Name)))
+                            {
+                                matching.Add(album);
+                            }
+                        }
+                        else if (FilterRequirement == FilterRequirement.Any)
+                        {
+                            if (LibraryManager.Filters.Any(filter => album.Tags.Any(tag => tag.Name == filter.Name)))
+                            {
+                                matching.Add(album);
+                            }
+                        }
+                    }
+                }
+                return new ObservableCollection<Album>(matching);
+            }
+        }
 
-				return new ObservableCollection<Album>(matching);
-			}
-		}
+        private void SortAndDisplayAlbums(ObservableCollection<Album> albumsToSort)
+        {
+            var sortedAlbums = new ObservableCollection<Album>();
 
-		private void SortAndDisplayAlbums(ObservableCollection<Album> albumsToSort)
-		{
-			var sortedAlbums = new ObservableCollection<Album>();
+            if (SortBy == SortBy.Artist)
+            {
+                if (IsSortingAscending)
+                {
+                    sortedAlbums = new ObservableCollection<Album>(albumsToSort.OrderBy(a => a.Artists[0].Name));
+                }
+                else
+                {
+                    sortedAlbums = new ObservableCollection<Album>(albumsToSort.OrderByDescending(a => a.Artists[0].Name));
+                }
+            }
+            else
+            {
+                if (IsSortingAscending)
+                {
+                    sortedAlbums = new ObservableCollection<Album>(albumsToSort.OrderBy(a => a.GetType().GetProperty(SortBy.ToString()).GetValue(a, null)));
+                }
+                else
+                {
+                    sortedAlbums = new ObservableCollection<Album>(albumsToSort.OrderByDescending(a => a.GetType().GetProperty(SortBy.ToString()).GetValue(a, null)));
+                }
+            }
 
-			if (SortBy == "Artist")
-			{
-				if (IsSortingAscending)
-				{
-					sortedAlbums = new ObservableCollection<Album>(albumsToSort.OrderBy(a => a.Artists[0].Name));
-				}
-				else
-				{
-					sortedAlbums = new ObservableCollection<Album>(albumsToSort.OrderByDescending(a => a.Artists[0].Name));
-				}
-			}
-			else
-			{
-				if (IsSortingAscending)
-				{
-					sortedAlbums = new ObservableCollection<Album>(albumsToSort.OrderBy(a => a.GetType().GetProperty(SortBy).GetValue(a, null)));
-				}
-				else
-				{
-					sortedAlbums = new ObservableCollection<Album>(albumsToSort.OrderByDescending(a => a.GetType().GetProperty(SortBy).GetValue(a, null)));
-				}
-			}
+            // Display sorted albums (sort is invoked last in filtering sequence).
+            LibraryManager.VisibleAlbums = sortedAlbums;
+        }
 
-			// Display sorted albums (sort is invoked last in filtering sequence).
-			LibraryManager.VisibleAlbums = sortedAlbums;
-		}
+        public void ToggleSortingDirection(object param)
+        {
+            IsSortingAscending = !IsSortingAscending;
+            ModifyVisibleAlbums(null);
+        }
 
-		public void ToggleSortingDirection(object param)
-		{
-			IsSortingAscending = !IsSortingAscending;
-			ModifyVisibleAlbums(null);
-		}
+        public async void SyncAlbums(object param)
+        {
+            if (Spotify.Client is not null)
+            {
+                LibraryManager.SelectedAlbum = new Album();
+                LibraryManager.AllAlbums = new ObservableCollection<Album>(await AlbumsProvider.SyncAlbums());
+                ModifyVisibleAlbums(null); // Refresh filters after ansychrouous album sync.
+            }
+        }
 
-		public void ChangeFilterType(object param)
-		{
-			FilterType = FilterType == FilterType.WithNoTags ? FilterType.AllMatching : FilterType + 1;
-			ModifyVisibleAlbums(null);
-		}
+        public async void LoginToSpotify(object param)
+        {
+            await Spotify.StartAuthentication();
+            SyncAlbums(null);
+            LibraryManager.LoadAllTags();
+        }
 
-		public async void SyncAlbums(object param)
-		{
-			if (Spotify.Client is not null)
-			{
-				LibraryManager.SelectedAlbum = new Album();
-				LibraryManager.AllAlbums = new ObservableCollection<Album>(await AlbumsProvider.SyncAlbums());
-				ModifyVisibleAlbums(null); // Refresh filters after ansychrouous album sync.
-			}
-		}
+        public ToolBarViewModel(LibraryManager libraryManager)
+        {
+            LibraryManager = libraryManager;
+            LibraryManager.Filters.CollectionChanged += (s, e) => ModifyVisibleAlbums(null);
+            LibraryManager.AllAlbums.CollectionChanged += (s, e) => ModifyVisibleAlbums(null);
 
-		public async void LoginToSpotify(object param)
-		{
-			await Spotify.StartAuthentication();
-			SyncAlbums(null);
-			LibraryManager.LoadAllTags();
-		}
-
-		public ToolBarViewModel(LibraryManager libraryManager)
-		{
-			LibraryManager = libraryManager;
-			LibraryManager.Filters.CollectionChanged += (s, e) => ModifyVisibleAlbums(null);
-			LibraryManager.AllAlbums.CollectionChanged += (s, e) => ModifyVisibleAlbums(null);
-
-			SearchCommand = new Command(ModifyVisibleAlbums);
-			ToggleSortingDirectionCommand = new Command(ToggleSortingDirection);
-			SyncCommand = new Command(SyncAlbums);
-			LoginCommand = new Command(LoginToSpotify);
-			ChangeFilterTypeCommand = new Command(ChangeFilterType);
-		}
-	}
+            SearchCommand = new Command(ModifyVisibleAlbums);
+            ToggleSortingDirectionCommand = new Command(ToggleSortingDirection);
+            SyncCommand = new Command(SyncAlbums);
+            LoginCommand = new Command(LoginToSpotify);
+        }
+    }
 }
