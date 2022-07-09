@@ -85,5 +85,5 @@ namespace SpotifyLibraryManager.Pages
 				SearchBtn.Command.Execute(SearchText.Text);
 			}
 		}
-	}
+    }
 }
