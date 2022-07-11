@@ -3,12 +3,12 @@
       xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
       xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
       xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
-      xmlns:local="clr-namespace:SpotifyLibraryManager.Pages" xmlns:userControls="clr-namespace:SpotifyLibraryManager.UserControls"
+      xmlns:local="clr-namespace:SpotifyLibraryManager.Pages" xmlns:userControls="clr-namespace:SpotifyLibraryManager.UserControls" xmlns:controls="clr-namespace:WpfToolkit.Controls;assembly=VirtualizingWrapPanel"
       mc:Ignorable="d" 
       d:DesignHeight="450" d:DesignWidth="800"
       Title="AlbumsListPage" KeyboardNavigation.TabNavigation="None">
 
-    <Grid>
+    <!--<Grid>
         <ScrollViewer x:Name="AlbumsScrollViewer">
             <ItemsControl x:Name="Albums" ItemsSource="{Binding LibraryManager.VisibleAlbums}">
                 <ItemsControl.ItemsPanel>
@@ -23,5 +23,33 @@
                 </ItemsControl.ItemTemplate>
             </ItemsControl>
         </ScrollViewer>
-    </Grid>
+    </Grid>-->
+    <ItemsControl x:Name="Albums" ItemsSource="{Binding LibraryManager.VisibleAlbums}" Width="924">
+        <ItemsControl.ItemTemplate>
+            <DataTemplate>
+                <userControls:AlbumCoverButton/>
+            </DataTemplate>
+        </ItemsControl.ItemTemplate>
+
+        <ItemsControl.ItemsPanel>
+            <ItemsPanelTemplate>
+                <controls:VirtualizingWrapPanel IsVirtualizing="True"
+                              VirtualizationMode="Standard"/>
+            </ItemsPanelTemplate>
+        </ItemsControl.ItemsPanel>
+
+        <ItemsControl.Template>
+            <ControlTemplate TargetType="ItemsControl">
+                <Border BorderThickness="{TemplateBinding BorderThickness}"
+              BorderBrush="{TemplateBinding BorderBrush}"
+              Background="{TemplateBinding Background}">
+                    <ScrollViewer CanContentScroll="True"
+                      Padding="{TemplateBinding Padding}"
+                      Focusable="False">
+                        <ItemsPresenter />
+                    </ScrollViewer>
+                </Border>
+            </ControlTemplate>
+        </ItemsControl.Template>
+    </ItemsControl>
 </Page>
